@@ -13,10 +13,33 @@ def is_fake_image_file(filename):
 def is_real_image_file(filename):
     return filename.startswith(AUTHENTIC_PREFIX)
 
+def get_num_images(path):
+    count = 0
+    for index, filename in  (enumerate(os.listdir(path))):
+        if not filename.endswith('.jpg'):
+            continue
+        count += 1
+    return count
+
+def get_sample_image_vector(path):
+    for index, filename in (enumerate(os.listdir(path))):
+        if not filename.endswith('.jpg'):
+            continue
+        fullpath = os.path.join(path, filename)
+        image_array = ndimage.imread(fullpath, mode="RGB")
+        image_vector = image_array.reshape(1, -1).T
+        return image_vector.shape
+    return None
+
 def get_x_y_data(path):
     """ Reads X/Y data matrices from the given folder path. """
-    X = None
-    Y = None
+    m = get_num_images(path)
+    n = get_sample_image_vector(path)[0]
+    print("Num images: ", m)
+    print("Num features: ", n)
+    X = np.zeros((m, n))
+    Y = np.zeros((m, 1))
+
 
     for index, filename in tqdm(enumerate(os.listdir(path))):
         if not filename.endswith('.jpg'):
