@@ -63,10 +63,13 @@ if __name__ == '__main__':
     train_split_ratio = 0.8
     dev_split_ratio = 0.1
     real_images_train_split = int(train_split_ratio * len(real_images_filenames))
-    real_images_dev_split = ((train_split_ratio + dev_split_ratio) * len(real_images_filenames))
+    real_images_dev_split = int((train_split_ratio + dev_split_ratio) * len(real_images_filenames))
+
     fake_images_train_split = int(train_split_ratio * len(fake_images_filenames))
     fake_images_dev_split = int((train_split_ratio + dev_split_ratio) * len(fake_images_filenames))
 
+    print("Real images: train_index={} dev_index={}", real_images_train_split, real_images_dev_split)
+    print("Fake images: train_index={} dev_index={}", fake_images_train_split, fake_images_dev_split)
     train_filenames = real_images_filenames[:real_images_train_split] + fake_images_filenames[:fake_images_train_split]
 
     dev_filenames = real_images_filenames[real_images_train_split:real_images_dev_split] + fake_images_filenames[fake_images_train_split:fake_images_dev_split]
