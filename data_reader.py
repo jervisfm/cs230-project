@@ -38,7 +38,7 @@ def get_x_y_data(path):
     print("Num images: ", m)
     print("Num features: ", n)
     X = np.zeros((m, n))
-    Y = np.zeros((m, 1))
+    Y = []
 
     image_index = 0
     for index, filename in tqdm(enumerate(os.listdir(path))):
@@ -50,11 +50,12 @@ def get_x_y_data(path):
         image_array = ndimage.imread(fullpath, mode="RGB")
         image_vector = image_array.reshape(1, -1)
 
-        y_label = np.full((1, 1), 1 if is_fake_image_file(filename) else 0)
+        y_label = 1 if is_fake_image_file(filename) else 0
         X[image_index] = image_vector
 
-        Y[image_index] = y_label
+        Y.append(y_label)
         image_index += 1
+    Y = np.array(Y)
     return X, Y
 
 class dataReader:
