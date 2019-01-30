@@ -12,7 +12,7 @@ from sklearn.metrics import classification_report
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--max_iter', default=100, help="Number of iterations to perform training.")
+parser.add_argument('--max_iter', default=100, help="Number of iterations to perform training.", type=int)
 parser.add_argument('--data_folder', default="data/processed_casia2", help="Data folder with preprocessed CASIA data into train/dev/test splits.")
 parser.add_argument('--results_folder', default='results/', help="Where to write any results.")
 parser.add_argument('--experiment_name', default=None, help="Name for the experiment. Useful for tagging files.")
