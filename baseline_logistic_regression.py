@@ -43,11 +43,11 @@ def main():
     X_train, Y_train = reader.getTrain()
     X_dev, Y_dev = reader.getDev()
     start_time_secs = time.time()
-    print("Starting Logistic Regression training ...")
+    print("Starting Logistic Regression training ...", X_train.shape, Y_train.shape)
     classifier = LogisticRegression(random_state=0,
                              solver='lbfgs',
                              multi_class='auto',
-                             verbose=10,
+                             verbose=1,
                              n_jobs=-1,
                              max_iter=FLAGS.max_iter).fit(X_train, Y_train)
     print("Training done.")
