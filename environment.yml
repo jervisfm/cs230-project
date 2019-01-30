@@ -1,0 +1,14 @@
+name: cs230Project
+channels:
+  - defaults
+dependencies:
+  - matplotlib
+  - numpy
+  - python=3.6
+  - scikit-learn
+  - pandas
+  - pillow
+  - pip:
+    - keras
+    - tensorflow
+    - h5py
