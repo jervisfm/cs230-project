@@ -24,4 +24,6 @@ $ source activate cs230Project
 ```
 
 
+We'll be using the CASIA dataset that's available at https://www.kaggle.com/sophatvathana/casia-dataset. Please download this and put under
+a data/ folder.
 
