@@ -40,7 +40,7 @@ def get_x_y_data(path):
     X = np.zeros((m, n))
     Y = np.zeros((m, 1))
 
-
+    image_index = 0
     for index, filename in tqdm(enumerate(os.listdir(path))):
         if not filename.endswith('.jpg'):
             continue
@@ -48,18 +48,13 @@ def get_x_y_data(path):
         fullpath = os.path.join(path, filename)
         #print("Processing  file #: {} - Name={}".format(index, filename))
         image_array = ndimage.imread(fullpath, mode="RGB")
-        image_vector = image_array.reshape(1, -1).T
+        image_vector = image_array.reshape(1, -1)
 
         y_label = np.full((1, 1), 1 if is_fake_image_file(filename) else 0)
-        if X is None:
-            X = image_vector
-        else:
-            X = np.concatenate((X, image_vector), axis=1)
+        X[image_index] = image_vector
 
-        if Y is None:
-            Y = y_label
-        else:
-            Y = np.concatenate((Y, y_label), axis=1)
+        Y[image_index] = y_label
+        image_index += 1
     return X, Y
 
 class dataReader:
