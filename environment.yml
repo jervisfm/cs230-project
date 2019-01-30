@@ -2,13 +2,13 @@ name: cs230Project
 channels:
   - defaults
 dependencies:
-  - matplotlib
-  - numpy
+  - matplotlib=3.0.2
+  - numpy=1.15.4
   - python=3.6
-  - scikit-learn
-  - pandas
-  - pillow
+  - scikit-learn=0.20.2
+  - pandas=0.24.0
+  - pillow=5.4.1
   - pip:
-    - keras
-    - tensorflow
-    - h5py
+    - keras==2.2.4
+    - tensorflow==1.12.0
+    - h5py==2.9.0
