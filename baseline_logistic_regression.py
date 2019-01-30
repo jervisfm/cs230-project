@@ -5,10 +5,10 @@ Implements a simple logistic regression baseline for the task of fake image iden
 import time
 import argparse
 import os
+from data_reader import dataReader
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
-
 
 
 parser = argparse.ArgumentParser()
@@ -38,8 +38,7 @@ def write_contents_to_file(output_file, input_string):
 def main():
     print("Using Data folder = ", FLAGS.data_folder)
 
-    # TODO: Implement the data reader.
-    reader = dataReader.dataReader(folder=FLAGS.data_folder)
+    reader = dataReader(folder=FLAGS.data_folder)
 
     X_train, Y_train = reader.getTrain()
     X_dev, Y_dev = reader.getDev()
