@@ -62,3 +62,19 @@ weighted avg       0.75      0.75      0.75       941
 
 ```
 
+
+Running at 400 iterations
+```
+Acurracy: 0.7120085015940489
+Training time(secs): 2077.106256723404
+Max training iterations: 400
+Training time / Max training iterations: 5.19276564180851
+Classification report:               precision    recall  f1-score   support
+
+        Real       0.85      0.77      0.81       735
+        Fake       0.38      0.52      0.44       206
+
+   micro avg       0.71      0.71      0.71       941
+   macro avg       0.62      0.64      0.62       941
+weighted avg       0.75      0.71      0.73       941
+```
