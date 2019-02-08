@@ -44,3 +44,21 @@ Classification report:               precision    recall  f1-score   support
    macro avg       0.56      0.51      0.46       941
 weighted avg       0.68      0.78      0.69       941
 ```
+
+Running at 100 iterations
+```
+Acurracy: 0.7513283740701382
+Training time(secs): 569.8644268512726
+Max training iterations: 100
+Training time / Max training iterations: 5.698644268512726
+Classification report:               precision    recall  f1-score   support
+
+        Real       0.84      0.84      0.84       735
+        Fake       0.43      0.43      0.43       206
+
+   micro avg       0.75      0.75      0.75       941
+   macro avg       0.64      0.64      0.64       941
+weighted avg       0.75      0.75      0.75       941
+
+```
+
