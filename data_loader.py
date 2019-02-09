@@ -79,7 +79,7 @@ def fetch_dataloader(types, data_dir, params):
                                         num_workers=params.num_workers,
                                         pin_memory=params.cuda)
             else:
-                dataloader = DataLoader(SIGNSDataset(path, transformer), batch_size=params.batch_size, shuffle=False,
+                dataloader = DataLoader(Casia2Dataset(path, transformer), batch_size=params.batch_size, shuffle=False,
                                 num_workers=params.num_workers,
                                 pin_memory=params.cuda)
 
