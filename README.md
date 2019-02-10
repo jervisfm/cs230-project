@@ -100,3 +100,33 @@ Classification report:               precision    recall  f1-score   support
    macro avg       0.60      0.62      0.60       941
 weighted avg       0.73      0.70      0.71       941
 ```
+
+## SVM baseline
+
+Mosts svm kernels didn't do too well, but poly got reasoanble results. Note however, this 
+was sensitive to the number of iterations. We found 10 iterations worked best.
+
+### Poly kernel
+```
+Acurracy: 0.7619553666312433
+Training time(secs): 8.219857215881348
+Max training iterations: 10
+Training time / Max training iterations: 0.8219857215881348
+Classification report:               precision    recall  f1-score   support
+
+        Real       0.78      0.97      0.86       735
+        Fake       0.05      0.00      0.01       206
+
+   micro avg       0.76      0.76      0.76       941
+   macro avg       0.41      0.49      0.44       941
+weighted avg       0.62      0.76      0.68       941
+```
+
+
+## TODOs
+
+* Add dev loss per epoch of training.
+* Add graphs for training loss / dev performance as training continues.
+* Try out a simple CNN network.
+* Work on Midterm Report.
+* Test out SVM baseline: DONE
