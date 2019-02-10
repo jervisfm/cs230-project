@@ -1,3 +1,6 @@
+
+import os
+import time
 import torch
 import torch.nn as nn
 import data_loader
@@ -48,7 +51,7 @@ def write_contents_to_file(output_file, input_string):
     with open(output_file, 'w') as file_handle:
         file_handle.write(input_string)
 
-def eval_on_train_set():
+def eval_on_train_set(model, train_loader):
     correct = 0
     total = 0
     for images, labels in train_loader:
@@ -62,7 +65,7 @@ def eval_on_train_set():
     return accuracy
 
 
-def eval_on_dev_set():
+def eval_on_dev_set(model, dev_loader):
     correct = 0
     total = 0
     for images, labels in dev_loader:
@@ -109,8 +112,8 @@ def train():
                 print('Epoch: [%d/%d], Step: [%d/%d], Loss: %.4f'
                       % (epoch + 1, FLAGS.max_iter, i + 1, len(train_loader) // batch_size, loss.item()))
             if (i + 1) % 20 == 0:
-                eval_on_train_set()
-                eval_on_dev_set()
+                eval_on_train_set(model, train_loader)
+                eval_on_dev_set(model, dev_loader)
 
     print('Training Complete')
     end_time_secs = time.time()
@@ -118,18 +121,19 @@ def train():
 
     # Test the Model on dev data
     print('Final Evaluations after TRAINING...')
-    train_accuracy = eval_on_train_set()
+    train_accuracy = eval_on_train_set(model, train_loader)
     # Test on the train model to see how we do on that as well.
-    dev_accuracy = eval_on_dev_set()
+    dev_accuracy = eval_on_dev_set(model, dev_loader)
 
     experiment_result_string = "-------------------\n"
-    experiment_result_string += "\nDev Acurracy: {}".format(dev_accuracy)
-    experiment_result_string += "\nTrain Acurracy: {}".format(train_accuracy)
+    experiment_result_string += "\nDev Acurracy: {}%".format(dev_accuracy)
+    experiment_result_string += "\nTrain Acurracy: {}%".format(train_accuracy)
     experiment_result_string += "\nTraining time(secs): {}".format(training_duration_secs)
     experiment_result_string += "\nMax training iterations: {}".format(FLAGS.max_iter)
     experiment_result_string += "\nTraining time / Max training iterations: {}".format(
         1.0 * training_duration_secs / FLAGS.max_iter)
 
+    print(experiment_result_string)
     # Save report to file
     write_contents_to_file(get_experiment_report_filename(), experiment_result_string)
 
