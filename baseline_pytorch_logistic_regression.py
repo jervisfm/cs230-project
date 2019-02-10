@@ -29,6 +29,7 @@ learning_rate = 0.001
 class LogisticRegression(nn.Module):
     def __init__(self, input_size, num_classes):
         super(LogisticRegression, self).__init__()
+        print("Input size is {}. Num Classes is {}".format(input_size, num_classes))
         self.linear = nn.Linear(input_size, num_classes)
 
     def forward(self, x):
@@ -54,7 +55,7 @@ def train():
     # Training the Model
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
-            images = Variable(images.view(-1, image_size * image_size))
+            images = Variable(images.view(-1, input_size))
             labels = Variable(labels)
 
             # Forward + Backward + Optimize
