@@ -37,6 +37,33 @@ class LogisticRegression(nn.Module):
         return out
 
 
+def eval_on_train_set():
+    correct = 0
+    total = 0
+    for images, labels in train_loader:
+        images = Variable(images.view(-1, input_size))
+        outputs = model(images)
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum()
+    accuracy = 100 * correct / total
+    print('Accuracy of the model on the training set of images: %d %%' % (accuracy))
+    return accuracy
+
+
+def eval_on_dev_set():
+    correct = 0
+    total = 0
+    for images, labels in dev_loader:
+        images = Variable(images.view(-1, input_size))
+        outputs = model(images)
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum()
+    accuracy = 100 * correct / total
+    print('Accuracy of the model on the dev set of images: %d %%' % (accuracy))
+    return accuracy
+
 def train():
     params = {'batch_size': 100, 'num_workers': 100, 'cuda': 0}
     data_loaders = data_loader.fetch_dataloader(['train', 'dev'], FLAGS.data_folder)
@@ -69,29 +96,16 @@ def train():
             if (i + 1) % 10 == 0:
                 print('Epoch: [%d/%d], Step: [%d/%d], Loss: %.4f'
                       % (epoch + 1, FLAGS.max_iter, i + 1, len(train_loader) // batch_size, loss.item()))
+            if (i + 1) % 20 == 0:
+                eval_on_train_set()
+                eval_on_dev_set()
+
 
     # Test the Model on dev data
-    correct = 0
-    total = 0
-    for images, labels in dev_loader:
-        images = Variable(images.view(-1, input_size))
-        outputs = model(images)
-        _, predicted = torch.max(outputs.data, 1)
-        total += labels.size(0)
-        correct += (predicted == labels).sum()
-    print('Accuracy of the model on the dev set of images: %d %%' % (100 * correct / total))
-
+    print('Final Evaluations after TRAINING...')
+    eval_on_train_set()
     # Test on the train model to see how we do on that as well.
-    correct = 0
-    total = 0
-    for images, labels in train_loader:
-        images = Variable(images.view(-1, input_size))
-        outputs = model(images)
-        _, predicted = torch.max(outputs.data, 1)
-        total += labels.size(0)
-        correct += (predicted == labels).sum()
-
-    print('Accuracy of the model on the training set of images: %d %%' % (100 * correct / total))
+    eval_on_dev_set()
 
 if __name__ == '__main__':
     train()
