@@ -78,6 +78,10 @@ def fetch_dataloader(types, data_dir, params=None):
     num_workers = params['num_workers']
     cuda = params['cuda']
 
+    supported_partitions = set(['train', 'dev', 'test'])
+    if not set(types).issubset(supported_partitions):
+        raise ValueError("Unrecgonized split. Only support train/dev/test but got {}".format(types))
+
     for split in ['train', 'dev', 'test']:
         if split in types:
             path = os.path.join(data_dir, "{}".format(split))
@@ -97,8 +101,6 @@ def fetch_dataloader(types, data_dir, params=None):
                                 pin_memory=cuda)
 
             dataloaders[split] = dataloader
-        else:
-            raise ValueError("Unrecgonized split. Only support train/dev/test but got {}".format(types))
 
 
     return dataloaders
