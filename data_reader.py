@@ -50,6 +50,7 @@ def get_x_y_data(path):
         image_array = ndimage.imread(fullpath, mode="RGB")
         image_vector = image_array.reshape(1, -1)
 
+        # Use 1 label for fake images.
         y_label = 1 if is_fake_image_file(filename) else 0
         X[image_index] = image_vector
 
