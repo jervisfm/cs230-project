@@ -54,13 +54,14 @@ def train():
     # Training the Model
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
-            images = Variable(images.view(-1, 28 * 28))
+            images = Variable(images.view(-1, image_size * image_size))
             labels = Variable(labels)
 
             # Forward + Backward + Optimize
             optimizer.zero_grad()
             outputs = model(images)
             loss = criterion(outputs, labels)
+
             loss.backward()
             optimizer.step()
 
@@ -78,7 +79,7 @@ def train():
         total += labels.size(0)
         correct += (predicted == labels).sum()
 
-    print('Accuracy of the model on the 10000 test images: %d %%' % (100 * correct / total))
+    print('Accuracy of the model on the dev set of images: %d %%' % (100 * correct / total))
 
 if __name__ == '__main__':
     train()
