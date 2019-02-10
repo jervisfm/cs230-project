@@ -36,6 +36,17 @@ class LogisticRegression(nn.Module):
         out = self.linear(x)
         return out
 
+def get_suffix_name():
+    return "_" + FLAGS.experiment_name if FLAGS.experiment_name else ""
+
+def get_experiment_report_filename():
+    suffix_name = get_suffix_name()
+    filename = "{}{}".format("baseline_pytorch_logistic_regression_results", suffix_name)
+    return os.path.join(FLAGS.results_folder, filename)
+
+def write_contents_to_file(output_file, input_string):
+    with open(output_file, 'w') as file_handle:
+        file_handle.write(input_string)
 
 def eval_on_train_set():
     correct = 0
@@ -80,6 +91,7 @@ def train():
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
     # Training the Model
+    start_time_secs = time.time()
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
             images = Variable(images.view(-1, input_size))
@@ -100,12 +112,26 @@ def train():
                 eval_on_train_set()
                 eval_on_dev_set()
 
+    print('Training Complete')
+    end_time_secs = time.time()
+    training_duration_secs = end_time_secs - start_time_secs
 
     # Test the Model on dev data
     print('Final Evaluations after TRAINING...')
-    eval_on_train_set()
+    train_accuracy = eval_on_train_set()
     # Test on the train model to see how we do on that as well.
-    eval_on_dev_set()
+    dev_accuracy = eval_on_dev_set()
+
+    experiment_result_string = "-------------------\n"
+    experiment_result_string += "\nDev Acurracy: {}".format(dev_accuracy)
+    experiment_result_string += "\nTrain Acurracy: {}".format(train_accuracy)
+    experiment_result_string += "\nTraining time(secs): {}".format(training_duration_secs)
+    experiment_result_string += "\nMax training iterations: {}".format(FLAGS.max_iter)
+    experiment_result_string += "\nTraining time / Max training iterations: {}".format(
+        1.0 * training_duration_secs / FLAGS.max_iter)
+
+    # Save report to file
+    write_contents_to_file(get_experiment_report_filename(), experiment_result_string)
 
 if __name__ == '__main__':
     train()
