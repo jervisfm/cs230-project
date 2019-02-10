@@ -12,13 +12,14 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--max_iter', default=100, help="Number of iterations to perform training.", type=int)
+parser.add_argument('--batch_size', default=100, help="Number of examples in one batch of minigradient descent.", type=int)
+parser.add_argument('--num_workers', default=20, help="Number of workers to use in loading data.", type=int)
+parser.add_argument('--cuda', default=False, help="Wheter to use cuda (gpu) for training.", type=bool)
 parser.add_argument('--data_folder', default="data/processed_casia2", help="Data folder with preprocessed CASIA data into train/dev/test splits.")
 parser.add_argument('--results_folder', default='results/', help="Where to write any results.")
 parser.add_argument('--experiment_name', default=None, help="Name for the experiment. Useful for tagging files.")
 
 FLAGS = parser.parse_args()
-
-
 
 # Hyper Parameters
 image_size = 128
@@ -79,14 +80,14 @@ def eval_on_dev_set(model, dev_loader):
     return accuracy
 
 def train():
-    params = {'batch_size': 100, 'num_workers': 100, 'cuda': 0}
-    data_loaders = data_loader.fetch_dataloader(['train', 'dev'], FLAGS.data_folder)
+    params = {'batch_size': FLAGS.batch_size, 'num_workers': FLAGS.num_workers, 'cuda': FLAGS.cuda}
+    data_loaders = data_loader.fetch_dataloader(['train', 'dev'], FLAGS.data_folder, params)
     train_loader = data_loaders['train']
     dev_loader = data_loaders['dev']
 
-
-    model = LogisticRegression(input_size, num_classes)
-
+    model = LogisticRegression(input_size, num_classes).cuda() if FLAGS.cuda \
+        else LogisticRegression(input_size, num_classes)
+    
     # Loss and Optimizer
     # Softmax is internally computed.
     # Set parameters to be updated.
@@ -97,6 +98,10 @@ def train():
     start_time_secs = time.time()
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
+
+            if FLAGS.cuda:
+                images, labels = images.cuda(async=True), labels.cuda(async=True)
+
             images = Variable(images.view(-1, input_size))
             labels = Variable(labels)
 
