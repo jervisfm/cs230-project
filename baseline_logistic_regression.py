@@ -55,12 +55,14 @@ def main():
     training_duration_secs = end_time_secs - start_time_secs
     Y_dev_prediction = classifier.predict(X_dev)
 
+    training_accuracy = classifier.score(X_train, Y_train)
     accuracy = classifier.score(X_dev, Y_dev)
 
     experiment_result_string = "-------------------\n"
     experiment_result_string += "\nPrediction: {}".format(Y_dev_prediction)
     experiment_result_string += "\nActual Label: {}".format(Y_dev)
-    experiment_result_string += "\nAcurracy: {}".format(accuracy)
+    experiment_result_string += "\nDev Acurracy: {}".format(accuracy)
+    experiment_result_string += "\nTrain Acurracy: {}".format(training_accuracy)
     experiment_result_string += "\nTraining time(secs): {}".format(training_duration_secs)
     experiment_result_string += "\nMax training iterations: {}".format(FLAGS.max_iter)
     experiment_result_string += "\nTraining time / Max training iterations: {}".format(
