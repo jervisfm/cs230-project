@@ -23,6 +23,11 @@ You can then activate the environment with:
 $ source activate cs230Project
 ```
 
+To pull in any updated dependencies, one can execute
+```
+$ conda env update
+```
+
 
 We'll be using the CASIA dataset that's available at https://www.kaggle.com/sophatvathana/casia-dataset. Please download this and put under
 a data/ folder. E.g. the Casia2 dataset would be at data/CASIA2/...
