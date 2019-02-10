@@ -66,21 +66,32 @@ def train():
             loss.backward()
             optimizer.step()
 
-            if (i + 1) % 1 == 0:
+            if (i + 1) % 10 == 0:
                 print('Epoch: [%d/%d], Step: [%d/%d], Loss: %.4f'
-                      % (epoch + 1, FLAGS.max_iter, i + 1, len(train_loader) // batch_size, loss.data[0]))
+                      % (epoch + 1, FLAGS.max_iter, i + 1, len(train_loader) // batch_size, loss.item()))
 
     # Test the Model on dev data
     correct = 0
     total = 0
     for images, labels in dev_loader:
-        images = Variable(images.view(-1, image_size * image_size))
+        images = Variable(images.view(-1, input_size))
+        outputs = model(images)
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum()
+    print('Accuracy of the model on the dev set of images: %d %%' % (100 * correct / total))
+
+    # Test on the train model to see how we do on that as well.
+    correct = 0
+    total = 0
+    for images, labels in train_loader:
+        images = Variable(images.view(-1, input_size))
         outputs = model(images)
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum()
 
-    print('Accuracy of the model on the dev set of images: %d %%' % (100 * correct / total))
+    print('Accuracy of the model on the training set of images: %d %%' % (100 * correct / total))
 
 if __name__ == '__main__':
     train()
