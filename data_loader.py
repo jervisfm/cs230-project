@@ -74,6 +74,10 @@ def fetch_dataloader(types, data_dir, params=None):
         print('Using Default params.')
         params = DEFAULT_PARAMS
 
+    batch_size = params['batch_size']
+    num_workers = params['num_workers']
+    cuda = params['cuda']
+
     for split in ['train', 'dev', 'test']:
         if split in types:
             path = os.path.join(data_dir, "{}".format(split))
@@ -82,14 +86,15 @@ def fetch_dataloader(types, data_dir, params=None):
             transformer = transforms.Compose([
                 transforms.ToTensor()])
 
+
             if split == 'train':
-                dataloader = DataLoader(Casia2Dataset(path, transformer), batch_size=params.batch_size, shuffle=True,
-                                        num_workers=params.num_workers,
-                                        pin_memory=params.cuda)
+                dataloader = DataLoader(Casia2Dataset(path, transformer), batch_size=batch_size, shuffle=True,
+                                        num_workers=num_workers,
+                                        pin_memory=cuda)
             else:
-                dataloader = DataLoader(Casia2Dataset(path, transformer), batch_size=params.batch_size, shuffle=False,
-                                num_workers=params.num_workers,
-                                pin_memory=params.cuda)
+                dataloader = DataLoader(Casia2Dataset(path, transformer), batch_size=batch_size, shuffle=False,
+                                num_workers=num_workers,
+                                pin_memory=cuda)
 
             dataloaders[split] = dataloader
         else:
