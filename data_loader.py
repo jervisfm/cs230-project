@@ -12,6 +12,11 @@ import torchvision.transforms as transforms
 import data_reader
 
 
+DEFAULT_PARAMS = {
+    'batch_size' : 100,
+    'cuda' : 0,
+    'num_workers': 10,
+}
 class Casia2Dataset(Dataset):
     """
     A standard PyTorch definition of Dataset which defines the functions __len__ and __getitem__
@@ -52,19 +57,22 @@ class Casia2Dataset(Dataset):
         return image, self.labels[idx]
 
 
-def fetch_dataloader(types, data_dir, params):
+def fetch_dataloader(types, data_dir, params=None):
     """
     Fetches the DataLoader object for each type in types from data_dir.
 
     Args:
-        types: (list) has one or more of 'train', 'val', 'test' depending on which data is required
+        types: (list) has one or more of 'train', 'dev', 'test' depending on which data is required
         data_dir: (string) directory containing the dataset
-        params: (Params) hyperparameters
+        params: (Params) Optional hyperparameters
 
     Returns:
         data: (dict) contains the DataLoader object for each type in types
     """
     dataloaders = {}
+    if params is None:
+        print('Using Default params.')
+        params = DEFAULT_PARAMS
 
     for split in ['train', 'dev', 'test']:
         if split in types:
@@ -84,5 +92,8 @@ def fetch_dataloader(types, data_dir, params):
                                 pin_memory=params.cuda)
 
             dataloaders[split] = dataloader
+        else:
+            raise ValueError("Unrecgonized split. Only support train/dev/test but got {}".format(types))
+
 
     return dataloaders
