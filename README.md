@@ -101,6 +101,19 @@ Classification report:               precision    recall  f1-score   support
 weighted avg       0.73      0.70      0.71       941
 ```
 
+PyTorch Logistic regression
+
+```
+-------------------
+
+Dev Acurracy: 74%
+Train Acurracy: 96%
+Training time(secs): 76004.55631327629
+Max training iterations: 10000
+Training time / Max training iterations: 7.6004556313276295
+
+```
+
 ## SVM baseline
 
 Mosts svm kernels didn't do too well, but poly got reasoanble results. Note however, this 
