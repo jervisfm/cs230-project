@@ -48,15 +48,22 @@ def get_experiment_report_filename():
     filename = "{}{}".format("baseline_pytorch_logistic_regression_results", suffix_name)
     return os.path.join(FLAGS.results_folder, filename)
 
-def get_train_dev_error_graph_filename():
+def get_train_dev_error_graph_filename(write_file=True):
     suffix_name = get_suffix_name()
     filename = "{}{}".format("baseline_pytorch_logistic_regression_train_dev_error_per_epoch.csv", suffix_name)
-    return os.path.join(FLAGS.results_folder, filename)
+    path =  os.path.join(FLAGS.results_folder, filename)
 
-def get_training_loss_graph_filename():
+    if write_file:
+        write_contents_to_file(path, 'epoch,train_accuracy,dev_accuracy\n')
+    return path
+
+def get_training_loss_graph_filename(write_file=True):
     suffix_name = get_suffix_name()
     filename = "{}{}".format("baseline_pytorch_logistic_regression_train_loss_per_minibatch.csv", suffix_name)
-    return os.path.join(FLAGS.results_folder, filename)
+    path =  os.path.join(FLAGS.results_folder, filename)
+    if write_file:
+        write_contents_to_file(path, 'mini_batch_iteration,loss\n')
+    return path
 
 def write_contents_to_file(output_file, input_string):
     with open(output_file, 'w') as file_handle:
@@ -117,10 +124,11 @@ def train():
     # Training the Model
     start_time_secs = time.time()
     train_dev_error_graph_filename = get_train_dev_error_graph_filename()
-    append_to_file(train_dev_error_graph_filename, 'epoch,train_accuracy,dev_accuracy')
+
 
     train_loss_graph_filename = get_training_loss_graph_filename()
-    append_to_file(train_loss_graph_filename, 'mini_batch_iteration,loss')
+
+    num_iteration = 0
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
 
@@ -141,11 +149,12 @@ def train():
             if (i + 1) % 10 == 0:
                 print('Epoch: [%d/%d], Step: [%d/%d], Loss: %.4f'
                       % (epoch + 1, FLAGS.max_iter, i + 1, len(train_loader) // batch_size, loss.item()))
-            append_to_file(train_loss_graph_filename, "%.4f" % loss.item())
+            append_to_file(train_loss_graph_filename, "%d,%.4f" % (num_iteration, loss.item()))
+            num_iteration += 1
 
         train_acc = eval_on_train_set(model, train_loader)
         dev_acc = eval_on_dev_set(model, dev_loader)
-        append_to_file(train_dev_error_graph_filename, '%s,%s,%s' % (epoch, train_acc, dev_acc))
+        append_to_file(train_dev_error_graph_filename, '%s,%s,%s' % (epoch, train_acc.item()/100, dev_acc.item()/100))
 
 
     print('Training Complete')
