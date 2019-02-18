@@ -68,7 +68,7 @@ def get_training_loss_graph_filename(write_file=True):
 
 def get_confusion_matrix_filename():
     suffix_name = get_suffix_name()
-    filename = "{}{}.png".format("baseline_pytorch_logistic_regression_confusion_matrix", suffix_name)
+    filename = "{}{}".format("baseline_pytorch_logistic_regression_confusion_matrix", suffix_name)
     return os.path.join(FLAGS.results_folder, filename)
 
 def write_contents_to_file(output_file, input_string):
@@ -100,6 +100,7 @@ def eval_on_dev_set(model, dev_loader):
     correct = 0
     total = 0
     y_true = []
+    y_predicted = []
 
     for images, labels in dev_loader:
         if FLAGS.cuda:
@@ -110,9 +111,12 @@ def eval_on_dev_set(model, dev_loader):
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum()
+        y_predicted.append(predicted.cpu())
+        y_true.append(labels.cpu())
+
     accuracy = 100 * correct / total
     print('Accuracy of the model on the dev set of images: %d %%' % (accuracy))
-    return accuracy
+    return accuracy, y_predicted, y_true
 
 def train():
     params = {'batch_size': FLAGS.batch_size, 'num_workers': FLAGS.num_workers, 'cuda': FLAGS.cuda}
@@ -137,6 +141,8 @@ def train():
     train_loss_graph_filename = get_training_loss_graph_filename()
 
     num_iteration = 0
+    y_dev_predicted = None
+    y_dev_true = None
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
 
@@ -161,7 +167,7 @@ def train():
             num_iteration += 1
 
         train_acc = eval_on_train_set(model, train_loader)
-        dev_acc = eval_on_dev_set(model, dev_loader)
+        dev_acc, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
         append_to_file(train_dev_error_graph_filename, '%s,%s,%s' % (epoch, train_acc.item()/100, dev_acc.item()/100))
 
 
@@ -188,7 +194,7 @@ def train():
     write_contents_to_file(get_experiment_report_filename(), experiment_result_string)
 
     # Generate confusion matrix
-    util.confusion_matrix()
+    util.create_confusion_matrices(y_dev_predicted, y_dev_true, get_confusion_matrix_filename())
 
 if __name__ == '__main__':
     train()
