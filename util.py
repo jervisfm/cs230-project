@@ -16,7 +16,6 @@ def get_label(Y):
             output.append('Fake')
         else:
             output.append('Real')
-    print(output)
     return output
 
 
