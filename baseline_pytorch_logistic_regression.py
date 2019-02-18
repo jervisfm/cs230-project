@@ -48,9 +48,19 @@ def get_experiment_report_filename():
     filename = "{}{}".format("baseline_pytorch_logistic_regression_results", suffix_name)
     return os.path.join(FLAGS.results_folder, filename)
 
+def get_train_dev_error_graph_filename():
+    suffix_name = get_suffix_name()
+    filename = "{}{}".format("baseline_pytorch_logistic_regression_train_dev_error_per_epoch", suffix_name)
+    return os.path.join(FLAGS.results_folder, filename)
+
 def write_contents_to_file(output_file, input_string):
     with open(output_file, 'w') as file_handle:
         file_handle.write(input_string)
+
+def append_to_file(output_file, data):
+    with open(output_file, 'a') as file_handle:
+        file_handle.write(data)
+        file_handle.write('\n')
 
 def eval_on_train_set(model, train_loader):
     correct = 0
@@ -101,6 +111,8 @@ def train():
 
     # Training the Model
     start_time_secs = time.time()
+    train_dev_error_graph_filename = get_train_dev_error_graph_filename()
+    append_to_file(train_dev_error_graph_filename, 'epoch,train_accuracy,dev_accuracy')
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
 
@@ -121,9 +133,11 @@ def train():
             if (i + 1) % 10 == 0:
                 print('Epoch: [%d/%d], Step: [%d/%d], Loss: %.4f'
                       % (epoch + 1, FLAGS.max_iter, i + 1, len(train_loader) // batch_size, loss.item()))
-            if (i + 1) % 20 == 0:
-                eval_on_train_set(model, train_loader)
-                eval_on_dev_set(model, dev_loader)
+
+        train_acc = eval_on_train_set(model, train_loader)
+        dev_acc = eval_on_dev_set(model, dev_loader)
+        append_to_file(train_dev_error_graph_filename, '%s,%s,%s' % (epoch, train_acc, dev_acc))
+
 
     print('Training Complete')
     end_time_secs = time.time()
