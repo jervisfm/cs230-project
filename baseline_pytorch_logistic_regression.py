@@ -87,7 +87,7 @@ def train():
 
     model = LogisticRegression(input_size, num_classes).cuda() if FLAGS.cuda \
         else LogisticRegression(input_size, num_classes)
-    
+
     # Loss and Optimizer
     # Softmax is internally computed.
     # Set parameters to be updated.

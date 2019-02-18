@@ -19,13 +19,22 @@ parser.add_argument('--image_size', default=SIZE, help="Rescaled image size.")
 parser.add_argument('--output_dir', default='data/processed_casia2', help="Where to write the preprocessed data")
 
 
-def resize_and_save(filename, output_dir, size=SIZE):
+def resize_and_save(filepath, output_dir, size=SIZE):
     """Resize the image contained in `filename` and save it to the `output_dir`"""
-    image = Image.open(filename)
+    image = Image.open(filepath)
     # Use bilinear interpolation instead of the default "nearest neighbor" method
     image = image.resize((size, size), Image.BILINEAR)
-    image.save(os.path.join(output_dir, filename.split('/')[-1]))
+    filename = filepath.split('/')[-1]
 
+    # file name is now like foo.bmp. Let's convert it to .jpg
+    filename = "%s.jpg" % (filename.split('.')[0])
+
+    image.save(os.path.join(output_dir, filename))
+
+
+
+def is_image_file(filename):
+    return filename.endswith('.jpg') or filename.endswith('.tif') or filename.endswith('.bmp')
 
 random_seed = 42
 if __name__ == '__main__':
@@ -42,10 +51,10 @@ if __name__ == '__main__':
 
     # Get the filenames in each directory
     real_images_filenames = os.listdir(real_images_dir)
-    real_images_filenames = [os.path.join(real_images_dir, f) for f in real_images_filenames if f.endswith('.jpg')]
+    real_images_filenames = [os.path.join(real_images_dir, f) for f in real_images_filenames if is_image_file(f)]
 
     fake_images_filenames = os.listdir(fake_images_dir)
-    fake_images_filenames = [os.path.join(fake_images_dir, f) for f in fake_images_filenames if f.endswith('.jpg')]
+    fake_images_filenames = [os.path.join(fake_images_dir, f) for f in fake_images_filenames if is_image_file(f)]
 
     # Split into train / test / dev for each of the image classes.
     # We'll use a split ratio of 80% train, 10% dev, 10% test.
