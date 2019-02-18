@@ -80,6 +80,13 @@ def append_to_file(output_file, data):
         file_handle.write(data)
         file_handle.write('\n')
 
+def flatten_tensor_list(prediction_list):
+    output = []
+    for tensor in prediction_list:
+        for x in tensor:
+            output.append(x)
+    return output
+
 def eval_on_train_set(model, train_loader):
     correct = 0
     total = 0
@@ -116,7 +123,7 @@ def eval_on_dev_set(model, dev_loader):
 
     accuracy = 100 * correct / total
     print('Accuracy of the model on the dev set of images: %d %%' % (accuracy))
-    return accuracy, y_predicted, y_true
+    return accuracy, flatten_tensor_list(y_predicted), flatten_tensor_list(y_true)
 
 def train():
     params = {'batch_size': FLAGS.batch_size, 'num_workers': FLAGS.num_workers, 'cuda': FLAGS.cuda}
@@ -141,8 +148,7 @@ def train():
     train_loss_graph_filename = get_training_loss_graph_filename()
 
     num_iteration = 0
-    y_dev_predicted = None
-    y_dev_true = None
+
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
 
@@ -179,7 +185,7 @@ def train():
     print('Final Evaluations after TRAINING...')
     train_accuracy = eval_on_train_set(model, train_loader)
     # Test on the train model to see how we do on that as well.
-    dev_accuracy = eval_on_dev_set(model, dev_loader)
+    dev_accuracy, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
 
     experiment_result_string = "-------------------\n"
     experiment_result_string += "\nDev Acurracy: {}%".format(dev_accuracy)

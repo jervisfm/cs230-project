@@ -16,7 +16,7 @@ def get_label(Y):
             output.append('Fake')
         else:
             output.append('Real')
-    print('Labels: ', output)
+    print(output)
     return output
 
 
@@ -40,12 +40,12 @@ def create_confusion_matrices(Y_predicted, Y_actual, file_name):
     fig1 = plt.figure()
     plot_confusion_matrix(confusion, classes=class_names,
                           title='Confusion matrix, without normalization')
-    fig1.savefig('imgs/cm_imgs/' + file_name + '.png')
+    fig1.savefig(file_name + '.png')
     # Plot normalized confusion matrix
     fig2 = plt.figure()
     plot_confusion_matrix(confusion, classes=class_names, normalize=True,
                           title='Normalized confusion matrix')
-    fig2.savefig('imgs/cm_imgs/' + file_name + '_norm.png')
+    fig2.savefig(file_name + '_norm.png')
 
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
