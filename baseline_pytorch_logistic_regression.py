@@ -2,6 +2,7 @@
 import os
 import time
 import torch
+import util
 import torch.nn as nn
 import data_loader
 import torchvision.datasets as dsets
@@ -65,6 +66,11 @@ def get_training_loss_graph_filename(write_file=True):
         write_contents_to_file(path, 'mini_batch_iteration,loss\n')
     return path
 
+def get_confusion_matrix_filename():
+    suffix_name = get_suffix_name()
+    filename = "{}{}.png".format("baseline_pytorch_logistic_regression_confusion_matrix", suffix_name)
+    return os.path.join(FLAGS.results_folder, filename)
+
 def write_contents_to_file(output_file, input_string):
     with open(output_file, 'w') as file_handle:
         file_handle.write(input_string)
@@ -93,6 +99,8 @@ def eval_on_train_set(model, train_loader):
 def eval_on_dev_set(model, dev_loader):
     correct = 0
     total = 0
+    y_true = []
+
     for images, labels in dev_loader:
         if FLAGS.cuda:
           images, labels = images.cuda(async=True), labels.cuda(async=True)
@@ -178,6 +186,9 @@ def train():
     print(experiment_result_string)
     # Save report to file
     write_contents_to_file(get_experiment_report_filename(), experiment_result_string)
+
+    # Generate confusion matrix
+    util.confusion_matrix()
 
 if __name__ == '__main__':
     train()
