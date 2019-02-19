@@ -64,7 +64,7 @@ if __name__ == '__main__':
 	print input_csv
 	if(graph_type == 'loss'):
 		plot_loss(input_csv)
-	if(graph_type == 'error'):
+	elif(graph_type == 'error'):
 		plot_error(input_csv)
 	else:
 		print("ERROR: Input was an incorrect graph type")
