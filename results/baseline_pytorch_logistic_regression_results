@@ -1,7 +1,7 @@
 -------------------
 
-Dev Acurracy: 58%
-Train Acurracy: 60%
-Training time(secs): 28.591898202896118
-Max training iterations: 3
-Training time / Max training iterations: 9.530632734298706
+Dev Acurracy: 59%
+Train Acurracy: 92%
+Training time(secs): 48657.84698796272
+Max training iterations: 10000
+Training time / Max training iterations: 4.865784698796272
