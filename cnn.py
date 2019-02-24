@@ -16,6 +16,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--max_iter', default=100, help="Number of iterations to perform training.", type=int)
+parser.add_argument('--save_model_every_num_epoch', default=10, help="Save/checkpoing model every given number of epochs while training.", type=int)
 parser.add_argument('--batch_size', default=100, help="Number of examples in one batch of minigradient descent.", type=int)
 parser.add_argument('--num_workers', default=20, help="Number of workers to use in loading data.", type=int)
 parser.add_argument('--learning_rate', default=0.001, help="Learning Rate hyperparameter.", type=float)
@@ -56,6 +57,12 @@ def get_experiment_report_filename():
     suffix_name = get_suffix_name()
     filename = "{}{}".format("cnn_results", suffix_name)
     return os.path.join(FLAGS.results_folder, filename)
+
+def get_model_checkpoint_path():
+    suffix_name = get_suffix_name()
+    filename = "{}{}.h5".format("cnn_checkpoint", suffix_name)
+    return os.path.join(FLAGS.results_folder, filename)
+
 
 def get_train_dev_error_graph_filename(write_file=True):
     suffix_name = get_suffix_name()
@@ -198,10 +205,17 @@ def train():
         dev_acc, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
         append_to_file(train_dev_error_graph_filename, '%s,%s,%s' % (epoch, train_acc.item()/100, dev_acc.item()/100))
 
+        if epoch % FLAGS.save_model_every_num_epoch == 0:
+            print('Checkpointing model...')
+            torch.save(model, get_model_checkpoint_path())
+
 
     print('Training Complete')
     end_time_secs = time.time()
     training_duration_secs = end_time_secs - start_time_secs
+
+    print('Checkpointing FINAL trained model...')
+    torch.save(model, get_model_checkpoint_path())
 
     # Test the Model on dev data
     print('Final Evaluations after TRAINING...')
