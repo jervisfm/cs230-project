@@ -175,6 +175,9 @@ def train():
     train_loss_graph_filename = get_training_loss_graph_filename()
     num_iteration = 0
 
+    print("Model arch: ", model)
+    print("Model size is ", sum([param.nelement() for param in model.parameters()]))
+
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
 
