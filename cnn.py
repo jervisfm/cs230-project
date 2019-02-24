@@ -19,6 +19,7 @@ parser.add_argument('--max_iter', default=100, help="Number of iterations to per
 parser.add_argument('--batch_size', default=100, help="Number of examples in one batch of minigradient descent.", type=int)
 parser.add_argument('--num_workers', default=20, help="Number of workers to use in loading data.", type=int)
 parser.add_argument('--learning_rate', default=0.001, help="Learning Rate hyperparameter.", type=float)
+parser.add_argument('--l2_regularization', default=0.0, help="Regularization parameter lambda for L2 regularization.", type=float)
 parser.add_argument('--cuda', default=False, help="Whether to use cuda (gpu) for training.", type=bool)
 parser.add_argument('--data_folder', default="data/processed_casia2", help="Data folder with preprocessed CASIA data into train/dev/test splits.")
 parser.add_argument('--model_name', default="alexnet", help="Name of CNN model to train. Must be name of one of models available under models directory. e.g. {simple_cnn_v1}")
@@ -158,7 +159,8 @@ def train():
     # Softmax is internally computed.
     # Set parameters to be updated.
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    #optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=FLAGS.l2_regularization)
 
     # Training the Model
     start_time_secs = time.time()
