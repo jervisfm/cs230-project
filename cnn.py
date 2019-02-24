@@ -208,7 +208,7 @@ def train():
         dev_acc, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
         append_to_file(train_dev_error_graph_filename, '%s,%s,%s' % (epoch, train_acc.item()/100, dev_acc.item()/100))
 
-        if epoch % FLAGS.save_model_every_num_epoch == 0:
+        if (epoch + 1) % FLAGS.save_model_every_num_epoch == 0:
             print('Checkpointing model...')
             torch.save(model, get_model_checkpoint_path())
 
