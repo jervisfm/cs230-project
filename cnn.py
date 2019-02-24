@@ -100,7 +100,7 @@ def eval_on_train_set(model, train_loader):
     for images, labels in train_loader:
         if FLAGS.cuda:
           images, labels = images.cuda(async=True), labels.cuda(async=True)
-        images = Variable(images.view(-1, input_size))
+        #images = Variable(images.view(-1, input_size))
         outputs = model(images).cuda() if FLAGS.cuda else model(images)
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
@@ -120,7 +120,7 @@ def eval_on_dev_set(model, dev_loader):
         if FLAGS.cuda:
           images, labels = images.cuda(async=True), labels.cuda(async=True)
 
-        images = Variable(images.view(-1, input_size))
+        #images = Variable(images.view(-1, input_size))
         outputs = model(images).cuda() if FLAGS.cuda else model(images)
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
@@ -172,7 +172,7 @@ def train():
             if FLAGS.cuda:
                 images, labels = images.cuda(async=True), labels.cuda(async=True)
 
-            images = Variable(images.view(-1, input_size))
+            images = Variable(images)
             labels = Variable(labels)
 
             # Forward + Backward + Optimize
