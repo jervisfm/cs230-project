@@ -6,7 +6,8 @@ import util
 import torch.nn as nn
 import data_loader
 import torchvision
-import models
+
+from models.v1 import CNNv1
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
 from torch.autograd import Variable
@@ -133,11 +134,11 @@ def eval_on_dev_set(model, dev_loader):
 
 def get_model():
     """ Returns the model to use for training. """
-    model_name = FLAGS.model_name.tolower()
+    model_name = FLAGS.model_name.lower()
     if model_name == 'alexnet':
         model = torchvision.models.alexnet()
     elif model_name == 'v1':
-        model = models.CNNv1(input_size, num_classes)
+        model = CNNv1(input_size, num_classes)
     else:
         raise ValueError('Got unexpected model: ', FLAGS.model_name)
 
