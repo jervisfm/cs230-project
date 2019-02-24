@@ -49,7 +49,7 @@ class LogisticRegression(nn.Module):
 def get_suffix_name():
     experiment_name = "_" + FLAGS.experiment_name if FLAGS.experiment_name else ""
     model_name = "_" + FLAGS.model_name
-    return "{}{}" % (model_name, experiment_name)
+    return "{}{}".format(model_name, experiment_name)
 
 def get_experiment_report_filename():
     suffix_name = get_suffix_name()
