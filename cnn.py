@@ -5,6 +5,7 @@ import torch
 import util
 import torch.nn as nn
 import data_loader
+import torchvision
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
 from torch.autograd import Variable
@@ -15,8 +16,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--max_iter', default=100, help="Number of iterations to perform training.", type=int)
 parser.add_argument('--batch_size', default=100, help="Number of examples in one batch of minigradient descent.", type=int)
 parser.add_argument('--num_workers', default=20, help="Number of workers to use in loading data.", type=int)
-parser.add_argument('--cuda', default=False, help="Wheter to use cuda (gpu) for training.", type=bool)
+parser.add_argument('--learning_rate', default=0.001, help="Learning Rate hyperparameter.", type=float)
+parser.add_argument('--cuda', default=False, help="Whether to use cuda (gpu) for training.", type=bool)
 parser.add_argument('--data_folder', default="data/processed_casia2", help="Data folder with preprocessed CASIA data into train/dev/test splits.")
+parser.add_argument('--model_name', default="alexnet", help="Name of CNN model to train. Must be name of one of models available under models directory. e.g. {simple_cnn_v1}")
 parser.add_argument('--results_folder', default='results/', help="Where to write any results.")
 parser.add_argument('--experiment_name', default=None, help="Name for the experiment. Useful for tagging files.")
 
@@ -27,8 +30,8 @@ image_size = 128
 input_size = image_size**2 * 3
 num_classes = 2
 #num_epochs = 5
-batch_size = 100
-learning_rate = 0.001
+batch_size = FLAGS.batch_size
+learning_rate = FLAGS.learning_rate
 
 # Model
 class LogisticRegression(nn.Module):
@@ -42,16 +45,18 @@ class LogisticRegression(nn.Module):
         return out
 
 def get_suffix_name():
-    return "_" + FLAGS.experiment_name if FLAGS.experiment_name else ""
+    experiment_name = "_" + FLAGS.experiment_name if FLAGS.experiment_name else ""
+    model_name = "_" + FLAGS.model_name
+    return "{}{}" % (model_name, experiment_name)
 
 def get_experiment_report_filename():
     suffix_name = get_suffix_name()
-    filename = "{}{}".format("baseline_pytorch_logistic_regression_results", suffix_name)
+    filename = "{}{}".format("cnn_results", suffix_name)
     return os.path.join(FLAGS.results_folder, filename)
 
 def get_train_dev_error_graph_filename(write_file=True):
     suffix_name = get_suffix_name()
-    filename = "{}{}".format("baseline_pytorch_logistic_regression_train_dev_error_per_epoch.csv", suffix_name)
+    filename = "{}{}".format("cnn_train_dev_error_per_epoch.csv", suffix_name)
     path =  os.path.join(FLAGS.results_folder, filename)
 
     if write_file:
@@ -60,15 +65,15 @@ def get_train_dev_error_graph_filename(write_file=True):
 
 def get_training_loss_graph_filename(write_file=True):
     suffix_name = get_suffix_name()
-    filename = "{}{}".format("baseline_pytorch_logistic_regression_train_loss_per_minibatch.csv", suffix_name)
-    path =  os.path.join(FLAGS.results_folder, filename)
+    filename = "{}{}".format("cnn_train_loss_per_minibatch.csv", suffix_name)
+    path = os.path.join(FLAGS.results_folder, filename)
     if write_file:
         write_contents_to_file(path, 'mini_batch_iteration,loss\n')
     return path
 
 def get_confusion_matrix_filename():
     suffix_name = get_suffix_name()
-    filename = "{}{}".format("baseline_pytorch_logistic_regression_confusion_matrix", suffix_name)
+    filename = "{}{}".format("cnn_confusion_matrix", suffix_name)
     return os.path.join(FLAGS.results_folder, filename)
 
 def write_contents_to_file(output_file, input_string):
@@ -125,14 +130,28 @@ def eval_on_dev_set(model, dev_loader):
     print('Accuracy of the model on the dev set of images: %d %%' % (accuracy))
     return accuracy, flatten_tensor_list(y_predicted), flatten_tensor_list(y_true)
 
+def get_model():
+    """ Returns the model to use for training. """
+
+    model_name = FLAGS.model_name.tolower()
+    if model_name == 'alexnet':
+        model = torchvision.models.alexnet()
+    elif model_name == 'v1':
+        pass
+    else:
+        raise ValueError('Got unexpected model: ', FLAGS.model_name)
+
+    model = model.cuda() if FLAGS.cuda else model
+    return model
+
 def train():
     params = {'batch_size': FLAGS.batch_size, 'num_workers': FLAGS.num_workers, 'cuda': FLAGS.cuda}
     data_loaders = data_loader.fetch_dataloader(['train', 'dev'], FLAGS.data_folder, params)
     train_loader = data_loaders['train']
     dev_loader = data_loaders['dev']
+    learning_rate = FLAGS.learning_rate
 
-    model = LogisticRegression(input_size, num_classes).cuda() if FLAGS.cuda \
-        else LogisticRegression(input_size, num_classes)
+    model = get_model()
 
     # Loss and Optimizer
     # Softmax is internally computed.
@@ -143,10 +162,7 @@ def train():
     # Training the Model
     start_time_secs = time.time()
     train_dev_error_graph_filename = get_train_dev_error_graph_filename()
-
-
     train_loss_graph_filename = get_training_loss_graph_filename()
-
     num_iteration = 0
 
     for epoch in range(FLAGS.max_iter):
