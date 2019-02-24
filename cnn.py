@@ -66,7 +66,7 @@ def get_model_checkpoint_path():
 
 def get_train_dev_error_graph_filename(write_file=True):
     suffix_name = get_suffix_name()
-    filename = "{}{}".format("cnn_train_dev_error_per_epoch.csv", suffix_name)
+    filename = "{}{}.csv".format("cnn_train_dev_error_per_epoch", suffix_name)
     path =  os.path.join(FLAGS.results_folder, filename)
 
     if write_file:
@@ -75,7 +75,7 @@ def get_train_dev_error_graph_filename(write_file=True):
 
 def get_training_loss_graph_filename(write_file=True):
     suffix_name = get_suffix_name()
-    filename = "{}{}".format("cnn_train_loss_per_minibatch.csv", suffix_name)
+    filename = "{}{}.csv".format("cnn_train_loss_per_minibatch", suffix_name)
     path = os.path.join(FLAGS.results_folder, filename)
     if write_file:
         write_contents_to_file(path, 'mini_batch_iteration,loss\n')
