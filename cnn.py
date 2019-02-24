@@ -183,9 +183,12 @@ def train():
             loss.backward()
             optimizer.step()
 
+
+            total_data_set_size = len(train_loader.dataset)
+            num_steps = total_data_set_size // batch_size
             if (i + 1) % 10 == 0:
                 print('Epoch: [%d/%d], Step: [%d/%d], Loss: %.4f'
-                      % (epoch + 1, FLAGS.max_iter, i + 1, len(train_loader) // batch_size, loss.item()))
+                      % (epoch + 1, FLAGS.max_iter, i + 1, num_steps, loss.item()))
             append_to_file(train_loss_graph_filename, "%d,%.4f" % (num_iteration, loss.item()))
             num_iteration += 1
 
