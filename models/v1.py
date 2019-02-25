@@ -21,7 +21,7 @@ class CNNv1(nn.Module):
         self.conv2 = nn.Sequential(nn.Conv2d(16, 32, 5, 1, 1), nn.ReLU(), nn.MaxPool2d(2), )
         # Intermeidate image is 122x122
 
-        self.output = nn.Sequential(nn.Linear(32 * 30 * 30, num_classes), nn.ReLU(),)
+        self.output = nn.Linear(32 * 30 * 30, num_classes)
 
     def forward(self, x):
         x = self.conv1(x)
