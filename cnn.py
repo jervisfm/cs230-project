@@ -144,7 +144,7 @@ def get_model():
     """ Returns the model to use for training. """
     model_name = FLAGS.model_name.lower()
     if model_name == 'alexnet':
-        model = torchvision.models.alexnet()
+        model = torchvision.models.alexnet(pretrained=False, num_classes=num_classes)
     elif model_name == 'v1':
         model = CNNv1(input_size, num_classes)
     else:
