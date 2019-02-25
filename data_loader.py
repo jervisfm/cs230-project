@@ -88,6 +88,7 @@ def fetch_dataloader(types, data_dir, params=None):
 
             # Image transformer to get a torch tensor.
             transformer = transforms.Compose([
+                #transforms.Resize(224),
                 transforms.ToTensor()])
 
 

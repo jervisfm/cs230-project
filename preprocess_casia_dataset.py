@@ -15,7 +15,7 @@ SIZE = 128
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_dir', default='data/CASIA2', help="Directory with the casia2 dataset")
-parser.add_argument('--image_size', default=SIZE, help="Rescaled image size.")
+parser.add_argument('--image_size', default=SIZE, help="Rescaled image size.", type=int)
 parser.add_argument('--output_dir', default='data/processed_casia2', help="Where to write the preprocessed data")
 
 
@@ -104,6 +104,6 @@ if __name__ == '__main__':
 
         print("Processing {} data, saving preprocessed data to {}".format(split, output_dir_split))
         for filename in tqdm(filenames[split]):
-            resize_and_save(filename, output_dir_split, size=SIZE)
+            resize_and_save(filename, output_dir_split, size=args.image_size)
 
     print("Done building dataset")
