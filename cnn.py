@@ -145,6 +145,23 @@ def get_model():
     model_name = FLAGS.model_name.lower()
     if model_name == 'alexnet':
         model = torchvision.models.alexnet(pretrained=False, num_classes=num_classes)
+    elif model_name == 'alexnet_pretrained':
+        model = torchvision.models.alexnet(pretrained=True)
+        for i, param in model.named_parameters():
+            param.requires_grad = False
+        model.classifier = nn.Sequential(
+            nn.Dropout(),
+            nn.Linear(256 * 6 * 6, 4096),
+            nn.ReLU(inplace=True),
+            nn.Dropout(),
+            nn.Linear(4096, 4096),
+            nn.ReLU(inplace=True),
+            nn.Linear(4096, num_classes),
+        )
+
+        for name_2, params in model.named_parameters():
+          print(name_2, params.requires_grad)
+
     elif model_name == 'v1':
         model = CNNv1(input_size, num_classes)
     else:
