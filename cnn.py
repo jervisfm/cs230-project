@@ -109,7 +109,12 @@ def eval_on_train_set(model, train_loader):
         if FLAGS.cuda:
           images, labels = images.cuda(async=True), labels.cuda(async=True)
         #images = Variable(images.view(-1, input_size))
-        outputs = model(images).cuda() if FLAGS.cuda else model(images)
+        outputs = model(images)
+        if FLAGS.cuda:
+            if FLAGS.model_name.lower().startswith("inception"):
+                outputs = outputs[0].cuda()
+            else:
+                outputs = outputs.cuda()
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum()
@@ -129,7 +134,12 @@ def eval_on_dev_set(model, dev_loader):
           images, labels = images.cuda(async=True), labels.cuda(async=True)
 
         #images = Variable(images.view(-1, input_size))
-        outputs = model(images).cuda() if FLAGS.cuda else model(images)
+        outputs = model(images)
+        if FLAGS.cuda:
+            if FLAGS.model_name.lower().startswith("inception"):
+                outputs = outputs[0].cuda()
+            else:
+                outputs = outputs.cuda()
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum()
