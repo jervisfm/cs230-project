@@ -159,9 +159,33 @@ def get_model():
             nn.Linear(4096, num_classes),
         )
 
-        for name_2, params in model.named_parameters():
-          print(name_2, params.requires_grad)
-
+        for name, params in model.named_parameters():
+          print(name, params.requires_grad)
+    elif model_name == 'inception':
+        model = torchvision.models.inception_v3(pretrained=False, num_classes=num_classes)
+    elif model_name == 'inception_pretrained':
+        model = torchvision.models.inception_v3(pretrained=True)
+        for i, param in model.named_parameters():
+            param.requires_grad = False
+        model.fc = nn.Linear(2048, num_classes)
+        for name, params in model.named_parameters():
+          print(name, params.requires_grad)
+    elif model_name == 'vgg16':
+        model = torchvision.models.vgg16(pretrained=False, num_classes=num_classes)
+    elif model_name == 'vgg16_pretrained':
+        model = torchvision.models.vgg16(pretrained=True)
+        for i, param in model.named_parameters():
+            param.requires_grad = False
+        model.classifier = nn.Sequential(
+            nn.Linear(512 * 7 * 7, 4096),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(4096, 4096),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(4096, num_classes))
+        for name, params in model.named_parameters():
+            print(name, params.requires_grad)
     elif model_name == 'v1':
         model = CNNv1(input_size, num_classes)
     else:
