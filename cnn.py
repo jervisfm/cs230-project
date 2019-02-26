@@ -230,7 +230,10 @@ def train():
 
             # Forward + Backward + Optimize
             optimizer.zero_grad()
-            outputs = model(images)
+            if FLAGS.model_name.lower().startswith("inception"):
+                outputs, _ = model(images)
+            else:
+                outputs = model(images)
             loss = criterion(outputs, labels)
 
             loss.backward()
