@@ -206,7 +206,7 @@ def get_model():
             print(name, params.requires_grad)
     elif model_name in ['densenet', 'densenet2', 'densenet3', 'densenet4']:
         model_init_mapping = {'densenet' : torchvision.models.densenet121, 'densenet2': torchvision.models.densenet161, 'densenet3': torchvision.models.densenet169, 'densenet4': torchvision.models.densenet201}
-        model =  model_init_mapping[model_name](pretrained=False, num_classes=num_classes)
+        model = model_init_mapping[model_name](pretrained=False, num_classes=num_classes)
     elif model_name in ['densenet_pretrained', 'densenet2_pretrained', 'densenet3_pretrained', 'densenet4_pretrained']:
         model_init_mapping = {'densenet_pretrained': torchvision.models.densenet121, 'densenet2_pretrained': torchvision.models.densenet161,
                               'densenet3_pretrained': torchvision.models.densenet169, 'densenet4_pretrained': torchvision.models.densenet201}
@@ -214,6 +214,30 @@ def get_model():
         for i, param in model.named_parameters():
             param.requires_grad = False
         model.classifier = nn.Sequential(
+            nn.Linear(512 * 7 * 7, 4096),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(4096, 4096),
+            nn.ReLU(True),
+            nn.Dropout(),
+            nn.Linear(4096, num_classes))
+        for name, params in model.named_parameters():
+            print(name, params.requires_grad)
+    elif model_name in ['resnet', 'resnet2', 'resnet3', 'resnet4']:
+        model_init_mapping = {'resnet': torchvision.models.resnet18, 'resnet2': torchvision.models.resnet34,
+                              'resnet3': torchvision.models.resnet50, 'resnet4': torchvision.models.resnet101,
+                              'resnet5': torchvision.models.resnet152}
+        model = model_init_mapping[model_name](pretrained=False, num_classes=num_classes)
+    elif model_name in ['resnet_pretrained', 'resnet2_pretrained', 'resnet3_pretrained', 'resnet4_pretrained']:
+        model_init_mapping = {'resnet_pretrained': torchvision.models.resnet18,
+                              'resnet2_pretrained': torchvision.models.resnet34,
+                              'resnet3_pretrained': torchvision.models.resnet50,
+                              'resnet4_pretrained': torchvision.models.resnet101,
+                              'resnet5_pretrained': torchvision.models.resnet152}
+        model = model_init_mapping[model_name](pretrained=True)
+        for i, param in model.named_parameters():
+            param.requires_grad = False
+        model.fc = nn.Sequential(
             nn.Linear(512 * 7 * 7, 4096),
             nn.ReLU(True),
             nn.Dropout(),
