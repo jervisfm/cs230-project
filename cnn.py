@@ -177,7 +177,15 @@ def get_model():
         model = torchvision.models.inception_v3(pretrained=True)
         for i, param in model.named_parameters():
             param.requires_grad = False
-        model.fc = nn.Linear(2048, num_classes)
+        model.fc = nn.Sequential(
+            nn.Dropout(),
+            nn.Linear(256 * 6 * 6, 4096),
+            nn.ReLU(inplace=True),
+            nn.Dropout(),
+            nn.Linear(4096, 4096),
+            nn.ReLU(inplace=True),
+            nn.Linear(4096, num_classes),
+        )
         for name, params in model.named_parameters():
           print(name, params.requires_grad)
     elif model_name == 'vgg16':
