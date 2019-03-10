@@ -243,13 +243,13 @@ def get_model():
         for i, param in model.named_parameters():
             param.requires_grad = False
         model.fc = nn.Sequential(
-            nn.Linear(512, 4096),
+            nn.Linear(512, 512),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(4096, 4096),
+            nn.Linear(512, 512),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(4096, num_classes))
+            nn.Linear(512, num_classes))
         for name, params in model.named_parameters():
             print(name, params.requires_grad)
     elif model_name == 'v1':
