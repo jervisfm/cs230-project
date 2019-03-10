@@ -210,17 +210,22 @@ def get_model():
     elif model_name in ['densenet_pretrained', 'densenet2_pretrained', 'densenet3_pretrained', 'densenet4_pretrained']:
         model_init_mapping = {'densenet_pretrained': torchvision.models.densenet121, 'densenet2_pretrained': torchvision.models.densenet161,
                               'densenet3_pretrained': torchvision.models.densenet169, 'densenet4_pretrained': torchvision.models.densenet201}
+        num_features_mapping = {'densenet_pretrained': 1024, # 1024
+                              'densenet2_pretrained': 2208,
+                              'densenet3_pretrained': 64, # TODO: Fix me. Wrong value.
+                              'densenet4_pretrained': 64} # TODO: Fix me. Wrong value.
         model = model_init_mapping[model_name](pretrained=True)
         for i, param in model.named_parameters():
             param.requires_grad = False
+        num_features = num_features_mapping[model_name]
         model.classifier = nn.Sequential(
-            nn.Linear(512 * 7 * 7, 4096),
+            nn.Linear(num_features, num_features),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(4096, 4096),
+            nn.Linear(num_features, num_features),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(4096, num_classes))
+            nn.Linear(num_features, num_classes))
         for name, params in model.named_parameters():
             print(name, params.requires_grad)
     elif model_name in ['resnet', 'resnet2', 'resnet3', 'resnet4']:
@@ -238,7 +243,7 @@ def get_model():
         for i, param in model.named_parameters():
             param.requires_grad = False
         model.fc = nn.Sequential(
-            nn.Linear(512 * 7 * 7, 4096),
+            nn.Linear(1, 4096), # should be 512?
             nn.ReLU(True),
             nn.Dropout(),
             nn.Linear(4096, 4096),
