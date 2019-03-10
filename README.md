@@ -155,8 +155,19 @@ Classification report:               precision    recall  f1-score   support
 weighted avg       0.62      0.76      0.68       941
 ```
 
+## Model training commands
+
+Example to train an inception
+
+```
+$ python cnn.py --max_iter 10 --model_name=inception_pretrained --data_folder=data/processed_casia2_224  --cuda=True --l2_regularization=0.0 --experiment_name "l2reg=0.0_iter=10"
+```
+
+
 ### Model Image size mappining
 * Inception -> 299x299
+
+
 
 
 ## TODOs
