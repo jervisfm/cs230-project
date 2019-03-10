@@ -166,7 +166,9 @@ $ python cnn.py --max_iter 10 --model_name=inception_pretrained --data_folder=da
 
 ### Model Image size mappining
 * Inception -> 299x299
-
+* Densenet -> 224x224
+* VGG16 -> 224x224
+* Resnet -> 224x224
 
 
 

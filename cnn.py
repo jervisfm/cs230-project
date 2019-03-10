@@ -22,6 +22,7 @@ parser.add_argument('--num_workers', default=20, help="Number of workers to use 
 parser.add_argument('--learning_rate', default=0.001, help="Learning Rate hyperparameter.", type=float)
 parser.add_argument('--l2_regularization', default=0.0, help="Regularization parameter lambda for L2 regularization.", type=float)
 parser.add_argument('--cuda', default=False, help="Whether to use cuda (gpu) for training.", type=bool)
+parser.add_argument('--unfreeze_all_weights', default=False, help="When using a pretrained model, whether to unfreeze all weights and make them trainable as well.", type=bool)
 parser.add_argument('--data_folder', default="data/processed_casia2", help="Data folder with preprocessed CASIA data into train/dev/test splits.")
 parser.add_argument('--model_name', default="alexnet", help="Name of CNN model to train. Must be name of one of models available under models directory. e.g. {simple_cnn_v1}")
 parser.add_argument('--results_folder', default='results/', help="Where to write any results.")
@@ -153,12 +154,13 @@ def eval_on_dev_set(model, dev_loader):
 def get_model():
     """ Returns the model to use for training. """
     model_name = FLAGS.model_name.lower()
+    unfreeze_weights = FLAGS.unfreeze_all_weights
     if model_name == 'alexnet':
         model = torchvision.models.alexnet(pretrained=False, num_classes=num_classes)
     elif model_name == 'alexnet_pretrained':
         model = torchvision.models.alexnet(pretrained=True)
         for i, param in model.named_parameters():
-            param.requires_grad = False
+            param.requires_grad = unfreeze_weights
         model.classifier = nn.Sequential(
             nn.Dropout(),
             nn.Linear(256 * 6 * 6, 4096),
@@ -176,7 +178,7 @@ def get_model():
     elif model_name == 'inception_pretrained':
         model = torchvision.models.inception_v3(pretrained=True)
         for i, param in model.named_parameters():
-            param.requires_grad = False
+            param.requires_grad = unfreeze_weights
         model.fc = nn.Sequential(
             nn.Dropout(),
             nn.Linear(2048, 2048),
@@ -193,7 +195,7 @@ def get_model():
     elif model_name == 'vgg16_pretrained':
         model = torchvision.models.vgg16(pretrained=True)
         for i, param in model.named_parameters():
-            param.requires_grad = False
+            param.requires_grad = unfreeze_weights
         model.classifier = nn.Sequential(
             nn.Linear(512 * 7 * 7, 4096),
             nn.ReLU(True),
@@ -216,7 +218,7 @@ def get_model():
                               'densenet4_pretrained': 64} # TODO: Fix me. Wrong value.
         model = model_init_mapping[model_name](pretrained=True)
         for i, param in model.named_parameters():
-            param.requires_grad = False
+            param.requires_grad = unfreeze_weights
         num_features = num_features_mapping[model_name]
         model.classifier = nn.Sequential(
             nn.Linear(num_features, num_features),
@@ -241,7 +243,7 @@ def get_model():
                               'resnet5_pretrained': torchvision.models.resnet152}
         model = model_init_mapping[model_name](pretrained=True)
         for i, param in model.named_parameters():
-            param.requires_grad = False
+            param.requires_grad = unfreeze_weights
         model.fc = nn.Sequential(
             nn.Linear(512, 512),
             nn.ReLU(True),
