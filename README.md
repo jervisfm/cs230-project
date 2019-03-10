@@ -135,6 +135,9 @@ Classification report:               precision    recall  f1-score   support
 weighted avg       0.62      0.76      0.68       941
 ```
 
+### Model Image size mappining
+* Inception -> 299x299
+
 
 ## TODOs
 
