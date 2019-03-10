@@ -182,9 +182,9 @@ def get_model():
             nn.Linear(2048, 2048),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(2048, 1024),
+            nn.Linear(2048, 2048),
             nn.ReLU(inplace=True),
-            nn.Linear(1024, num_classes),
+            nn.Linear(2048, num_classes),
         )
         for name, params in model.named_parameters():
           print(name, params.requires_grad)
