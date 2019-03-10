@@ -243,7 +243,7 @@ def get_model():
         for i, param in model.named_parameters():
             param.requires_grad = False
         model.fc = nn.Sequential(
-            nn.Linear(1, 4096), # should be 512?
+            nn.Linear(512, 4096),
             nn.ReLU(True),
             nn.Dropout(),
             nn.Linear(4096, 4096),
