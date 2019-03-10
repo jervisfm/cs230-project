@@ -159,6 +159,7 @@ weighted avg       0.62      0.76      0.68       941
 * Inception -> 299x299
 * Densenet -> 224x224
 * VGG16 -> 224x224
+* Resnet -> 224x224
 
 ## TODOs
 
