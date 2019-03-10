@@ -14,6 +14,9 @@ python preprocess_casia_dataset.py --image_size=224 --output_dir=data/processed_
 echo "Generating Dataset for 229x229 images"
 python preprocess_casia_dataset.py --image_size=229 --output_dir=data/processed_casia2_229
 
+echo "Generating Dataset for 299x299 images"
+python preprocess_casia_dataset.py --image_size=299 --output_dir=data/processed_casia2_299
+
 echo "Generating Dataset for 512x512 images"
 python preprocess_casia_dataset.py --image_size=512 --output_dir=data/processed_casia2_512
 

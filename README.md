@@ -32,6 +32,26 @@ $ conda env update
 We'll be using the CASIA dataset that's available at https://www.kaggle.com/sophatvathana/casia-dataset. Please download this and put under
 a data/ folder. E.g. the Casia2 dataset would be at data/CASIA2/...
 
+
+### Screen Session Management
+We also use GNU screen for session management. To check for list of available sessions
+run
+```
+$ screen -ls
+```
+
+We usually have a single `cs230` session that we all share. To attach to this session, just
+run
+```
+$ screen -x cs229
+```
+
+Some helpful screen commands:
+* Open a new window in session - Ctrl + A, c
+* Go to next window in session - Ctrl + A, n
+* Go to previous window in session - Ctrl + A, p
+
+
 # Initial baseline results
 Running an extremely simple logistic regression with only 10 epochs of training, we got the following result:
 
@@ -145,4 +165,4 @@ weighted avg       0.62      0.76      0.68       941
 * Add graphs for training loss / dev performance as training continues.
 * Try out a simple CNN network.
 * Work on Midterm Report.
-* Test out SVM baseline: DONE
+* Test out SVM baseline: DONE.
