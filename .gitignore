@@ -39,3 +39,5 @@ data/
 logs/
 
 results/tensorboard/
+
+*.h5
