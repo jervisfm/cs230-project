@@ -1,0 +1,4 @@
+epoch,train_accuracy,dev_accuracy
+0,0.68,0.69
+1,0.68,0.68
+2,0.71,0.7
