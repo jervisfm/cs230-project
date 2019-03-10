@@ -142,4 +142,4 @@ weighted avg       0.62      0.76      0.68       941
 * Add graphs for training loss / dev performance as training continues.
 * Try out a simple CNN network.
 * Work on Midterm Report.
-* Test out SVM baseline: DONE
+* Test out SVM baseline: DONE.
