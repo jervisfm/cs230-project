@@ -157,7 +157,7 @@ weighted avg       0.62      0.76      0.68       941
 
 ### Model Image size mappining
 * Inception -> 299x299
-
+* Densenet -> 224x224
 
 ## TODOs
 
