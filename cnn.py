@@ -179,12 +179,12 @@ def get_model():
             param.requires_grad = False
         model.fc = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(256 * 6 * 6, 4096),
+            nn.Linear(2048, 2048),
             nn.ReLU(inplace=True),
             nn.Dropout(),
-            nn.Linear(4096, 4096),
+            nn.Linear(2048, 1024),
             nn.ReLU(inplace=True),
-            nn.Linear(4096, num_classes),
+            nn.Linear(1024, num_classes),
         )
         for name, params in model.named_parameters():
           print(name, params.requires_grad)
