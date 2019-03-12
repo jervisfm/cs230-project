@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import itertools
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_recall_fscore_support
 
 def get_label(Y):
     labels = list(set(Y))
@@ -45,6 +46,18 @@ def create_confusion_matrices(Y_predicted, Y_actual, file_name):
     plot_confusion_matrix(confusion, classes=class_names, normalize=True,
                           title='Normalized confusion matrix')
     fig2.savefig(file_name + '_norm.png')
+
+def compute_precision_recall_f1_score(Y_predicted, Y_actual):
+    """
+    Returns a tuple (precision, recall, f1_score).
+    :param Y_predicted:
+    :param Y_actual:
+    """
+    Y_actual = get_label(Y_actual)
+    Y_predicted = get_label(Y_predicted)
+    (precision, recall, f1score, _) = precision_recall_fscore_support(Y_actual, Y_predicted)
+    return (precision, recall, f1score)
+
 
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
