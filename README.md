@@ -175,7 +175,7 @@ $ python cnn.py --max_iter 10 --model_name=inception_pretrained --data_folder=da
 * densenet_pretrained_l2reg=0_iter=10 - 67%
 * resnet_pretrained_l2reg=0_iter=10 - 68%
 * results_resnet_pretrained_l2reg=0_iter=3_trainallweights - 70%
-* 
+* results_resnet_pretrained_l2reg=0_iter=50_trainallweights - 74% (This was achieved on the 12th epoch)
 
 ## TODOs
 
