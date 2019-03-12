@@ -171,6 +171,11 @@ $ python cnn.py --max_iter 10 --model_name=inception_pretrained --data_folder=da
 * Resnet -> 224x224
 
 
+## Promising results
+* densenet_pretrained_l2reg=0_iter=10 - 67%
+* resnet_pretrained_l2reg=0_iter=10 - 68%
+* results_resnet_pretrained_l2reg=0_iter=3_trainallweights - 70%
+* 
 
 ## TODOs
 
