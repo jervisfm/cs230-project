@@ -15,7 +15,7 @@ import plotly.figure_factory as FF
 import plotly.offline as offline
 import numpy as np
 import pandas as pd
-
+import scipy
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input_csv', default='input.csv', help="File the csv results")
@@ -25,12 +25,14 @@ parser.add_argument('--graph_type', default='loss', help="Use 'error' to plot th
 
 def plot_loss(input_csv):
 	df = pd.read_csv(input_csv)
+	# Use following line to plot one out of every 250 rows.
+	# df = df.iloc[1::250, :]
 	print(df)
 	trace1 = go.Scatter(
 	                    x=df['mini_batch_iteration'], y=df['loss'], # Data
-	                    mode='lines', name='loss' # Additional options
+	                    mode='lines', name='Training loss' # Additional options
 	                   )
-	layout = go.Layout(title='Loss vs. Num Iterations',plot_bgcolor='rgb(230, 230,230)',xaxis=dict(title='Num Iterations',),yaxis=dict(title='Loss',))
+	layout = go.Layout(title='Training Loss vs. Num Iterations',plot_bgcolor='rgb(230, 230,230)',xaxis=dict(title='Num Iterations',),yaxis=dict(title='Loss',))
 	fig = go.Figure(data=[trace1], layout=layout)
 
 	# Plot data to imagfe
@@ -40,6 +42,8 @@ def plot_error(input_csv):
 	df = pd.read_csv(input_csv)
 	df.loc[:, 'train_accuracy'] = 1 - df
 	df.loc[:, 'dev_accuracy'] = 1 - df
+	# Use following line to plot only 250 sampled points. 
+	# df = df.iloc[1:2500:10, :]
 	df.rename(columns={'train_accuracy': 'train_error', 'dev_accuracy' : 'dev_error'}, inplace=True)
 	print(df)
 	trace1 = go.Scatter(
@@ -50,7 +54,7 @@ def plot_error(input_csv):
                     x=df['epoch'], y=df['dev_error'], # Data
                     mode='lines', name='dev_error' # Additional options
                    )
-	layout = go.Layout(title='Train/Dev Error vs. Num Epocs',plot_bgcolor='rgb(230, 230,230)',xaxis=dict(title='Num Iterations',),yaxis=dict(title='Error',))
+	layout = go.Layout(title='Train/Dev Error vs. Num Epocs',plot_bgcolor='rgb(230, 230,230)',xaxis=dict(title='Num Epochs',),yaxis=dict(title='Error',))
 	fig = go.Figure(data=[trace1, trace2], layout=layout)
 
 	# Plot data in the notebook
