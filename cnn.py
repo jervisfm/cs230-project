@@ -23,6 +23,7 @@ parser.add_argument('--learning_rate', default=0.001, help="Learning Rate hyperp
 parser.add_argument('--l2_regularization', default=0.0, help="Regularization parameter lambda for L2 regularization.", type=float)
 parser.add_argument('--cuda', default=False, help="Whether to use cuda (gpu) for training.", type=bool)
 parser.add_argument('--unfreeze_all_weights', default=False, help="When using a pretrained model, whether to unfreeze all weights and make them trainable as well.", type=bool)
+parser.add_argument('--unfreeze_ratio', default=1.0, help="Ratio of weights to be unfrozen. 1.0 to have all weights unfrozen.", type=float)
 parser.add_argument('--data_folder', default="data/processed_casia2", help="Data folder with preprocessed CASIA data into train/dev/test splits.")
 parser.add_argument('--model_name', default="alexnet", help="Name of CNN model to train. Must be name of one of models available under models directory. e.g. {simple_cnn_v1}")
 parser.add_argument('--results_folder', default='results/', help="Where to write any results.")
@@ -103,6 +104,12 @@ def flatten_tensor_list(prediction_list):
             output.append(x)
     return output
 
+def get_num_model_parameters(model_parameters):
+    count = 0
+    for index, param in model_parameters:
+        count += 1
+    return count
+
 def eval_on_train_set(model, train_loader):
     correct = 0
     total = 0
@@ -155,6 +162,7 @@ def get_model():
     """ Returns the model to use for training. """
     model_name = FLAGS.model_name.lower()
     unfreeze_weights = FLAGS.unfreeze_all_weights
+    unfreeze_ratio = FLAGS.unfreeze_ratio
     if model_name == 'alexnet':
         model = torchvision.models.alexnet(pretrained=False, num_classes=num_classes)
     elif model_name == 'alexnet_pretrained':
@@ -194,7 +202,15 @@ def get_model():
         model = torchvision.models.vgg16(pretrained=False, num_classes=num_classes)
     elif model_name == 'vgg16_pretrained':
         model = torchvision.models.vgg16(pretrained=True)
-        for i, param in model.named_parameters():
+        model_parameters = model.named_parameters()
+        num_model_parameters = get_num_model_parameters(model_parameters)
+        max_num_parameters = num_model_parameters * unfreeze_ratio
+        print("Num Model traininable parameters: ", num_model_parameters)
+        print("Limiting to max num training parameters", max_num_parameters)
+        for index, (name, param) in enumerate(model.named_parameters()):
+            if (unfreeze_weights and index >= max_num_parameters):
+                param.requires_grad = False
+                continue
             param.requires_grad = unfreeze_weights
         model.classifier = nn.Sequential(
             nn.Linear(512 * 7 * 7, 4096),
