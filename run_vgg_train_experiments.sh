@@ -18,17 +18,17 @@ CUDA=True
 NUM_ITER=3
 RATIO=0.2
 echo ">>> Training VGG16 all weights RATIO=${RATIO}..."
-python cnn.py --max_iter $NUM_ITER --model_name=vgg16_pretrained --data_folder=data/processed_casia2_224  --cuda=$CUDA --l2_regularization=$REG --unfreeze_all_weights=True --experiment_name "l2reg=${REG}_iter=${NUM_ITER}_unfreezeratio=${RATIO}_trainallweights"
+python cnn.py --unfreeze_ratio=${RATIO} --max_iter $NUM_ITER --model_name=vgg16_pretrained --data_folder=data/processed_casia2_224  --cuda=$CUDA --l2_regularization=$REG --unfreeze_all_weights=True --experiment_name "l2reg=${REG}_iter=${NUM_ITER}_unfreezeratio=${RATIO}_trainallweights"
 echo "VGG Done"
 
 RATIO=0.1
 echo ">>> Training VGG16 all weights RATIO=${RATIO}..."
-python cnn.py --max_iter $NUM_ITER --model_name=vgg16_pretrained --data_folder=data/processed_casia2_224  --cuda=$CUDA --l2_regularization=$REG --unfreeze_all_weights=True --experiment_name "l2reg=${REG}_iter=${NUM_ITER}_unfreezeratio=${RATIO}_trainallweights"
+python cnn.py --unfreeze_ratio=${RATIO} --max_iter $NUM_ITER --model_name=vgg16_pretrained --data_folder=data/processed_casia2_224  --cuda=$CUDA --l2_regularization=$REG --unfreeze_all_weights=True --experiment_name "l2reg=${REG}_iter=${NUM_ITER}_unfreezeratio=${RATIO}_trainallweights"
 echo "VGG Done"
 
 RATIO=0.05
 echo ">>> Training VGG16 all weights RATIO=${RATIO}..."
-python cnn.py  --max_iter $NUM_ITER --model_name=vgg16_pretrained --data_folder=data/processed_casia2_224  --cuda=$CUDA --l2_regularization=$REG --unfreeze_all_weights=True --experiment_name "l2reg=${REG}_iter=${NUM_ITER}_unfreezeratio=${RATIO}_trainallweights"
+python cnn.py --unfreeze_ratio=${RATIO}  --max_iter $NUM_ITER --model_name=vgg16_pretrained --data_folder=data/processed_casia2_224  --cuda=$CUDA --l2_regularization=$REG --unfreeze_all_weights=True --experiment_name "l2reg=${REG}_iter=${NUM_ITER}_unfreezeratio=${RATIO}_trainallweights"
 echo "VGG Done"
 
 ####
