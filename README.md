@@ -177,6 +177,13 @@ $ python cnn.py --max_iter 10 --model_name=inception_pretrained --data_folder=da
 * results_resnet_pretrained_l2reg=0_iter=3_trainallweights - 70%
 * results_resnet_pretrained_l2reg=0_iter=50_trainallweights - 74% (This was achieved on the 12th epoch)
 
+VGG
+```
+python cnn.py --batch_size=50 --unfreeze_ratio=0.5 --max_iter 3 --model_name=vgg16_pretrained --data_folder=data/processed_casia2_224 --cuda=True --l2_regularization=0 --unfreeze_all_weights=True --experiment_name l2reg=0_iter=3_unfreezeratio=0.5_trainallweights
+
+Got dev accuracy of 61 / train accuracy 60  but didn't OOM. Could allow training for longer.
+```
+
 ## TODOs
 
 * Add dev loss per epoch of training.
