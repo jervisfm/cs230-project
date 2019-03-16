@@ -14,9 +14,9 @@ CUDA=True
 
 for BATCH_SIZE in 25 50 75 100
 do
-	for L_R in 0.001 0.003 0.006 0.009
+	for L_R in 0.00025 0.0005 0.00075 0.001
 	do
-		for REG in 0 0.02 0.05 0.007
+		for REG in 0 0.01 0.001 0.005
 		do
 			# # Resnet
 			echo ">>> Training Resnet..."
