@@ -246,28 +246,34 @@ def get_model():
             nn.Linear(num_features, num_classes))
         for name, params in model.named_parameters():
             print(name, params.requires_grad)
-    elif model_name in ['resnet', 'resnet2', 'resnet3', 'resnet4']:
+    elif model_name in ['resnet', 'resnet2', 'resnet3', 'resnet4', 'resnet5']:
         model_init_mapping = {'resnet': torchvision.models.resnet18, 'resnet2': torchvision.models.resnet34,
                               'resnet3': torchvision.models.resnet50, 'resnet4': torchvision.models.resnet101,
                               'resnet5': torchvision.models.resnet152}
         model = model_init_mapping[model_name](pretrained=False, num_classes=num_classes)
-    elif model_name in ['resnet_pretrained', 'resnet2_pretrained', 'resnet3_pretrained', 'resnet4_pretrained']:
+    elif model_name in ['resnet_pretrained', 'resnet2_pretrained', 'resnet3_pretrained', 'resnet4_pretrained', 'resnet5_pretrained']:
         model_init_mapping = {'resnet_pretrained': torchvision.models.resnet18,
                               'resnet2_pretrained': torchvision.models.resnet34,
                               'resnet3_pretrained': torchvision.models.resnet50,
                               'resnet4_pretrained': torchvision.models.resnet101,
                               'resnet5_pretrained': torchvision.models.resnet152}
         model = model_init_mapping[model_name](pretrained=True)
+        num_features_mapping = {'resnet_pretrained': 512,
+                              'resnet2_pretrained': 512,
+                              'resnet3_pretrained': 2048,
+                              'resnet4_pretrained': 2048,
+                              'resnet5_pretrained': 2048}
+        num_features = num_features_mapping[model_name]
         for i, param in model.named_parameters():
             param.requires_grad = unfreeze_weights
         model.fc = nn.Sequential(
-            nn.Linear(512, 512),
+            nn.Linear(num_features, num_features),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(512, 512),
+            nn.Linear(num_features, num_features),
             nn.ReLU(True),
             nn.Dropout(),
-            nn.Linear(512, num_classes))
+            nn.Linear(num_features, num_classes))
         for name, params in model.named_parameters():
             print(name, params.requires_grad)
     elif model_name == 'v1':
