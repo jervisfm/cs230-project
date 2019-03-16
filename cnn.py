@@ -230,8 +230,8 @@ def get_model():
                               'densenet3_pretrained': torchvision.models.densenet169, 'densenet4_pretrained': torchvision.models.densenet201}
         num_features_mapping = {'densenet_pretrained': 1024, # 1024
                               'densenet2_pretrained': 2208,
-                              'densenet3_pretrained': 64, # TODO: Fix me. Wrong value.
-                              'densenet4_pretrained': 64} # TODO: Fix me. Wrong value.
+                              'densenet3_pretrained': 1664,
+                              'densenet4_pretrained': 1920}
         model = model_init_mapping[model_name](pretrained=True)
         for i, param in model.named_parameters():
             param.requires_grad = unfreeze_weights
