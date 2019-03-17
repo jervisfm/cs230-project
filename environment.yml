@@ -3,6 +3,7 @@ channels:
   - pytorch
   - defaults
 dependencies:
+  - bayesian-optimization==1.0.1
   - matplotlib=3.0.2
   - numpy=1.15.4
   - python=3.6
