@@ -7,21 +7,25 @@ import argparse
 import random
 import os
 
-from PIL import Image
+from PIL import Image, ImageChops, ImageEnhance
 from tqdm import tqdm
 
 
 SIZE = 128
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--enable_ela', default=True, help="Option to use Error Level Analysis during preprocessing step", type=bool)
+parser.add_argument('--ela_quality', default=90, help="Quality of resaved image before difference is checked", type=int)
 parser.add_argument('--data_dir', default='data/CASIA2', help="Directory with the casia2 dataset")
 parser.add_argument('--image_size', default=SIZE, help="Rescaled image size.", type=int)
 parser.add_argument('--output_dir', default='data/processed_casia2', help="Where to write the preprocessed data")
 
 
-def resize_and_save(filepath, output_dir, size=SIZE):
+def resize_and_save(filepath, output_dir, enable_ela, ela_quality, size=SIZE):
     """Resize the image contained in `filename` and save it to the `output_dir`"""
     image = Image.open(filepath)
+    if enable_ela:
+        image = generate_ela(image, output_dir, ela_quality)
     # Use bilinear interpolation instead of the default "nearest neighbor" method
     image = image.resize((size, size), Image.BILINEAR)
     filename = filepath.split('/')[-1]
@@ -30,6 +34,24 @@ def resize_and_save(filepath, output_dir, size=SIZE):
     filename = "%s.jpg" % (filename.split('.')[0])
 
     image.save(os.path.join(output_dir, filename))
+
+
+def generate_ela(image, output_dir, ela_quality):
+    # Resave and open image with lower quality
+    resave_path = output_dir + '_resaved.jpg'
+    image.save(resave_path, 'JPEG', quality=ela_quality)
+    resaved_image = Image.open(resave_path)
+    # Remove resaved image
+    os.remove(resave_path)
+    # Get ELA of image
+    ela_image = ImageChops.difference(image, resaved_image)
+    extrema = ela_image.getextrema()
+    max_diff = max([ex[1] for ex in extrema])
+    scale = 255.0/max_diff
+    ela_image = ImageEnhance.Brightness(ela_image).enhance(scale)
+
+    return ela_image
+
 
 
 
@@ -89,6 +111,9 @@ if __name__ == '__main__':
                  'dev': dev_filenames,
                  'test': test_filenames}
 
+    if args.enable_ela:
+        args.output_dir = args.output_dir + '_ela'
+
     if not os.path.exists(args.output_dir):
         os.mkdir(args.output_dir)
     else:
@@ -104,6 +129,6 @@ if __name__ == '__main__':
 
         print("Processing {} data, saving preprocessed data to {}".format(split, output_dir_split))
         for filename in tqdm(filenames[split]):
-            resize_and_save(filename, output_dir_split, size=args.image_size)
+            resize_and_save(filename, output_dir_split, args.enable_ela, args.ela_quality, size=args.image_size)
 
     print("Done building dataset")
