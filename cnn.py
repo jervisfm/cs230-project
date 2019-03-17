@@ -351,9 +351,9 @@ def train():
 
         train_acc = eval_on_train_set(model, train_loader)
         dev_acc, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
-        dev_precision, dev_recall, dev_f1score = compute_precision_recall_f1_score(y_dev_predicted, y_dev_true)
+        dev_precision, dev_recall, dev_f1score = util.compute_precision_recall_f1_score(y_dev_predicted, y_dev_true)
         dev_accuracy_list.append(dev_acc)
-        append_to_file(train_dev_error_graph_filename, '%s,%s,%s,%s' % (epoch, train_acc.item()/100.0, dev_acc.item()/100.0, dev_precision, dev_recall, dev_f1score))
+        append_to_file(train_dev_error_graph_filename, '%s,%s,%s,%s,%s,%s' % (epoch, train_acc.item()/100.0, dev_acc.item()/100.0, str(dev_precision), str(dev_recall), str(dev_f1score)))
 
         if (epoch + 1) % FLAGS.save_model_every_num_epoch == 0:
             print('Checkpointing model...')
@@ -372,13 +372,14 @@ def train():
     train_accuracy = eval_on_train_set(model, train_loader)
     # Test the Model on dev data
     dev_accuracy, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
-    dev_precision, dev_recall, dev_f1score = compute_precision_recall_f1_score(y_dev_predicted, y_dev_true)
+    dev_precision, dev_recall, dev_f1score = util.compute_precision_recall_f1_score(y_dev_predicted, y_dev_true)
 
     dev_accuracy_list.append(dev_accuracy)
     best_dev_accuracy = max(dev_accuracy_list)
     best_dev_accuracy_index = dev_accuracy_list.index(best_dev_accuracy)
     best_dev_accuracy_epoch = best_dev_accuracy_index + 1
 
+    experiment_result_string = "-------------------\n"
     experiment_result_string += "\nDev Acurracy: {}%".format(dev_accuracy)
     experiment_result_string += "\nBest Dev Acurracy over training: {}% seen at epoch {}".format(best_dev_accuracy, best_dev_accuracy_epoch)
     experiment_result_string += "\nDev Precision: {}%".format(dev_precision)
