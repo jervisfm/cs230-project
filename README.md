@@ -196,6 +196,14 @@ $ ssh -i ~/.ssh/cs230proj.pem ubuntu@ec2-54-214-145-187.us-west-2.compute.amazon
 ```
 
 
+#### Param tuning
+
+Best dev accuracy of 75% seen at epoch 4.
+
+```
+['python', 'cnn.py', '--max_iter', '11', '--batch_size', '70', '--learning_rate', '0.00010113231069171439', '--model_name=resnet_pretrained', '--data_folder=data/processed_casia2_224', '--cuda=True', '--l2_regul
+arization=0.014409286623908741', '--unfreeze_all_weights=True', '--experiment_name', 'l2reg=0.014409286623908741_iter=11_trainallweights=True_unfreezeratio=0.5733779454085566']
+```
 ## TODOs
 
 * Add dev loss per epoch of training.
