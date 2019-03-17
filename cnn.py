@@ -83,7 +83,7 @@ def get_train_dev_error_graph_filename(write_file=True):
     path =  os.path.join(FLAGS.results_folder, filename)
 
     if write_file:
-        write_contents_to_file(path, 'epoch,train_accuracy,dev_accuracy\n')
+        write_contents_to_file(path, 'epoch,train_accuracy,dev_accuracy,dev_precision,dev_recall,dev_f1score\n')
     return path
 
 def get_training_loss_graph_filename(write_file=True):
@@ -137,7 +137,7 @@ def eval_on_train_set(model, train_loader):
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum()
-    accuracy = 100 * correct / total
+    accuracy = 100.0 * correct / total
     print('Accuracy of the model on the training set of images: %d %%' % (accuracy))
     return accuracy
 
@@ -165,7 +165,7 @@ def eval_on_dev_set(model, dev_loader):
         y_predicted.append(predicted.cpu())
         y_true.append(labels.cpu())
 
-    accuracy = 100 * correct / total
+    accuracy = 100.0 * correct / total
     print('Accuracy of the model on the dev set of images: %d %%' % (accuracy))
     return accuracy, flatten_tensor_list(y_predicted), flatten_tensor_list(y_true)
 
@@ -351,8 +351,9 @@ def train():
 
         train_acc = eval_on_train_set(model, train_loader)
         dev_acc, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
+        dev_precision, dev_recall, dev_f1score = util.compute_precision_recall_f1_score(y_dev_predicted, y_dev_true)
         dev_accuracy_list.append(dev_acc)
-        append_to_file(train_dev_error_graph_filename, '%s,%s,%s' % (epoch, train_acc.item()/100, dev_acc.item()/100))
+        append_to_file(train_dev_error_graph_filename, '%s,%s,%s,%s,%s,%s' % (epoch, train_acc.item()/100.0, dev_acc.item()/100.0, str(dev_precision), str(dev_recall), str(dev_f1score)))
 
         if (epoch + 1) % FLAGS.save_model_every_num_epoch == 0:
             print('Checkpointing model...')
@@ -371,6 +372,8 @@ def train():
     train_accuracy = eval_on_train_set(model, train_loader)
     # Test the Model on dev data
     dev_accuracy, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
+    dev_precision, dev_recall, dev_f1score = util.compute_precision_recall_f1_score(y_dev_predicted, y_dev_true)
+
     dev_accuracy_list.append(dev_accuracy)
     best_dev_accuracy = max(dev_accuracy_list)
     best_dev_accuracy_index = dev_accuracy_list.index(best_dev_accuracy)
@@ -379,6 +382,9 @@ def train():
     experiment_result_string = "-------------------\n"
     experiment_result_string += "\nDev Acurracy: {}%".format(dev_accuracy)
     experiment_result_string += "\nBest Dev Acurracy over training: {}% seen at epoch {}".format(best_dev_accuracy, best_dev_accuracy_epoch)
+    experiment_result_string += "\nDev Precision: {}%".format(dev_precision)
+    experiment_result_string += "\nDev Recall: {}%".format(dev_recall)
+    experiment_result_string += "\nDev F1 Score: {}%".format(dev_f1score)
     experiment_result_string += "\nTrain Acurracy: {}%".format(train_accuracy)
     experiment_result_string += "\nTraining time(secs): {}".format(training_duration_secs)
     experiment_result_string += "\nMax training iterations: {}".format(FLAGS.max_iter)

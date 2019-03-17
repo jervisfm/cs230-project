@@ -37,6 +37,7 @@ def resize_and_save(filepath, output_dir, enable_ela, ela_quality, size=SIZE):
 
 
 def generate_ela(image, output_dir, ela_quality):
+    image = image.convert("RGB")
     # Resave and open image with lower quality
     resave_path = output_dir + '_resaved.jpg'
     image.save(resave_path, 'JPEG', quality=ela_quality)

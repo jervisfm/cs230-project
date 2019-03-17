@@ -53,9 +53,10 @@ def compute_precision_recall_f1_score(Y_predicted, Y_actual):
     :param Y_predicted:
     :param Y_actual:
     """
+    class_names = ['Real', 'Fake']
     Y_actual = get_label(Y_actual)
     Y_predicted = get_label(Y_predicted)
-    (precision, recall, f1score, _) = precision_recall_fscore_support(Y_actual, Y_predicted)
+    (precision, recall, f1score, _) = precision_recall_fscore_support(Y_actual, Y_predicted, labels=class_names, pos_label='Fake', average='binary')
     return (precision, recall, f1score)
 
 

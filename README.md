@@ -176,6 +176,8 @@ $ python cnn.py --max_iter 10 --model_name=inception_pretrained --data_folder=da
 * resnet_pretrained_l2reg=0_iter=10 - 68%
 * results_resnet_pretrained_l2reg=0_iter=3_trainallweights - 70%
 * results_resnet_pretrained_l2reg=0_iter=50_trainallweights - 74% (This was achieved on the 12th epoch)
+* resnet_pretrained_l2reg=0.001_iter=20_batchSize=50_learningRate=0.00025_trainallweights - 75% (5th epoch)
+* resnet_pretrained_l2reg=0_iter=20_batchSize=50_learningRate=0.0005_trainallweights - 75% (15th epoch)
 
 VGG
 ```
@@ -196,6 +198,14 @@ $ ssh -i ~/.ssh/cs230proj.pem ubuntu@ec2-54-214-145-187.us-west-2.compute.amazon
 ```
 
 
+#### Param tuning
+
+Best dev accuracy of 75% seen at epoch 4.
+
+```
+['python', 'cnn.py', '--max_iter', '11', '--batch_size', '70', '--learning_rate', '0.00010113231069171439', '--model_name=resnet_pretrained', '--data_folder=data/processed_casia2_224', '--cuda=True', '--l2_regul
+arization=0.014409286623908741', '--unfreeze_all_weights=True', '--experiment_name', 'l2reg=0.014409286623908741_iter=11_trainallweights=True_unfreezeratio=0.5733779454085566']
+```
 ## TODOs
 
 * Add dev loss per epoch of training.
