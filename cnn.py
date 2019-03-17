@@ -13,6 +13,14 @@ import torchvision.transforms as transforms
 from torch.autograd import Variable
 import argparse
 
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--max_iter', default=100, help="Number of iterations to perform training.", type=int)
@@ -21,7 +29,9 @@ parser.add_argument('--batch_size', default=100, help="Number of examples in one
 parser.add_argument('--num_workers', default=20, help="Number of workers to use in loading data.", type=int)
 parser.add_argument('--learning_rate', default=0.001, help="Learning Rate hyperparameter.", type=float)
 parser.add_argument('--l2_regularization', default=0.0, help="Regularization parameter lambda for L2 regularization.", type=float)
-parser.add_argument('--cuda', default=False, help="Whether to use cuda (gpu) for training.", type=bool)
+parser.add_argument('--cuda', type=str2bool, nargs='?',
+                    const=True, default="False",
+                    help="Whether to use cuda (gpu) for training.")
 parser.add_argument('--unfreeze_all_weights', default=False, help="When using a pretrained model, whether to unfreeze all weights and make them trainable as well.", type=bool)
 parser.add_argument('--unfreeze_ratio', default=1.0, help="Ratio of weights to be unfrozen. 1.0 to have all weights unfrozen.", type=float)
 parser.add_argument('--data_folder', default="data/processed_casia2", help="Data folder with preprocessed CASIA data into train/dev/test splits.")
@@ -49,6 +59,7 @@ class LogisticRegression(nn.Module):
     def forward(self, x):
         out = self.linear(x)
         return out
+
 
 def get_suffix_name():
     experiment_name = "_" + FLAGS.experiment_name if FLAGS.experiment_name else ""
@@ -308,7 +319,7 @@ def train():
 
     print("Model arch: ", model)
     print("Model size is ", sum([param.nelement() for param in model.parameters()]))
-
+    dev_accuracy_list = []
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
 
@@ -341,6 +352,7 @@ def train():
         train_acc = eval_on_train_set(model, train_loader)
         dev_acc, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
         dev_precision, dev_recall, dev_f1score = compute_precision_recall_f1_score(y_dev_predicted, y_dev_true)
+        dev_accuracy_list.append(dev_acc)
         append_to_file(train_dev_error_graph_filename, '%s,%s,%s,%s' % (epoch, train_acc.item()/100.0, dev_acc.item()/100.0, dev_precision, dev_recall, dev_f1score))
 
         if (epoch + 1) % FLAGS.save_model_every_num_epoch == 0:
@@ -355,15 +367,20 @@ def train():
     print('Checkpointing FINAL trained model...')
     torch.save(model, get_model_checkpoint_path())
 
-    # Test the Model on dev data
     print('Final Evaluations after TRAINING...')
-    train_accuracy = eval_on_train_set(model, train_loader)
     # Test on the train model to see how we do on that as well.
+    train_accuracy = eval_on_train_set(model, train_loader)
+    # Test the Model on dev data
     dev_accuracy, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
     dev_precision, dev_recall, dev_f1score = compute_precision_recall_f1_score(y_dev_predicted, y_dev_true)
 
-    experiment_result_string = "-------------------\n"
+    dev_accuracy_list.append(dev_accuracy)
+    best_dev_accuracy = max(dev_accuracy_list)
+    best_dev_accuracy_index = dev_accuracy_list.index(best_dev_accuracy)
+    best_dev_accuracy_epoch = best_dev_accuracy_index + 1
+
     experiment_result_string += "\nDev Acurracy: {}%".format(dev_accuracy)
+    experiment_result_string += "\nBest Dev Acurracy over training: {}% seen at epoch {}".format(best_dev_accuracy, best_dev_accuracy_epoch)
     experiment_result_string += "\nDev Precision: {}%".format(dev_precision)
     experiment_result_string += "\nDev Recall: {}%".format(dev_recall)
     experiment_result_string += "\nDev F1 Score: {}%".format(dev_f1score)
@@ -380,5 +397,10 @@ def train():
     # Generate confusion matrix
     util.create_confusion_matrices(y_dev_predicted, y_dev_true, get_confusion_matrix_filename())
 
+    return best_dev_accuracy
+
 if __name__ == '__main__':
-    train()
+    best_dev_accuracy = train()
+    # Note: We return the best dev accuracy in the exit code so that we can use this in our hyperparameter tuning
+    # script to do more automated parameter tuning.
+    exit(best_dev_accuracy)
