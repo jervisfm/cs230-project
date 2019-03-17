@@ -68,7 +68,7 @@ def train_function(max_iter=100, batch_size=100, learning_rate=0.001, l2_regular
 def main():
     # Bounded region of parameter space to explore.
     pbounds = {
-        'max_iter': (10, 15),
+        'max_iter': (4, 12),
         'batch_size': (50, 100),
         'learning_rate': (0.0001, 0.01),
         'l2_regularization': (0.00001, 0.02),
@@ -78,7 +78,6 @@ def main():
         f=train_function,
         pbounds=pbounds,
         verbose=2,  # verbose = 1 prints only when a maximum is observed, verbose = 0 is silent
-        random_state=1
     )
 
     optimizer.maximize(

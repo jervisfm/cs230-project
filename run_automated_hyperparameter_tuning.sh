@@ -6,11 +6,11 @@ echo "Starting Hyperparameter tuning ..."
 CUDA=True
 
 # Want to spend 2 hours doing random explorations @ 30 minutes per trial.
-INIT_POINTS=2
+INIT_POINTS=5
 # Resnet model 1 epoch takes ~2 minutes. So for 15 epochs max, that's 30 minutes runtime.
 # For an overnight run, we can explore 24 samples.
-MAX_ITER=6
-DATA_FOLDER="data/processed_casia2_224"
+MAX_ITER=16
+DATA_FOLDER="data/processed_casia2_224_ela"
 
 MODEL_NAME="resnet_pretrained"
 
