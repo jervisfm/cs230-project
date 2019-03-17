@@ -33,6 +33,8 @@ FLAGS = parser.parse_args()
 
 def train_function(max_iter=100, batch_size=100, learning_rate=0.001, l2_regularization=0, cuda=FLAGS.cuda, unfreeze_all_weights="True", unfreeze_ratio=1.0, model_name=FLAGS.model_name, data_folder=FLAGS.data_folder):
     """Executes training with given parameters. Returns best dev accuracy score."""
+    max_iter = int(max_iter)
+    batch_size = int(batch_size)
     shell_command="python cnn.py " \
                   "--max_iter {} " \
                   "--batch_size {} " \
