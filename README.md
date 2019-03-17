@@ -176,6 +176,7 @@ $ python cnn.py --max_iter 10 --model_name=inception_pretrained --data_folder=da
 * resnet_pretrained_l2reg=0_iter=10 - 68%
 * results_resnet_pretrained_l2reg=0_iter=3_trainallweights - 70%
 * results_resnet_pretrained_l2reg=0_iter=50_trainallweights - 74% (This was achieved on the 12th epoch)
+* cnn_train_dev_error_per_epoch_resnet_pretrained_l2reg=0.001_iter=20_batchSize=50_learningRate=0.00025_trainallweights - 75% (5th epoch)
 
 VGG
 ```
