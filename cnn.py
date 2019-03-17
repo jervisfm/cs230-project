@@ -398,4 +398,4 @@ if __name__ == '__main__':
     best_dev_accuracy = train()
     # Note: We return the best dev accuracy in the exit code so that we can use this in our hyperparameter tuning
     # script to do more automated parameter tuning.
-    exit(best_dev_accuracy)
+    exit(best_dev_accuracy.item())
