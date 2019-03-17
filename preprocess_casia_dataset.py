@@ -113,7 +113,7 @@ if __name__ == '__main__':
                  'test': test_filenames}
 
     if args.enable_ela:
-        args.output_dir = args.output_dir + '_ela'
+        args.output_dir = args.output_dir + '_ela{}'.format(args.ela_quality)
 
     if not os.path.exists(args.output_dir):
         os.mkdir(args.output_dir)
