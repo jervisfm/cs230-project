@@ -1,0 +1,8 @@
+-------------------
+
+Dev Acurracy: 72%
+Best Dev Acurracy over training: 74% seen at epoch 19
+Train Acurracy: 85%
+Training time(secs): 2393.4444468021393
+Max training iterations: 20
+Training time / Max training iterations: 119.67222234010697
