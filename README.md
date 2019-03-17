@@ -184,6 +184,18 @@ python cnn.py --batch_size=50 --unfreeze_ratio=0.5 --max_iter 3 --model_name=vgg
 Got dev accuracy of 61 / train accuracy 60  but didn't OOM. Could allow training for longer.
 ```
 
+
+### AWS instance
+VM 1
+```
+$ ssh -i ~/.ssh/cs230proj.pem ubuntu@ec2-34-220-41-38.us-west-2.compute.amazonaws.com
+```
+VM 2
+```
+$ ssh -i ~/.ssh/cs230proj.pem ubuntu@ec2-54-214-145-187.us-west-2.compute.amazonaws.com
+```
+
+
 ## TODOs
 
 * Add dev loss per epoch of training.
@@ -191,3 +203,5 @@ Got dev accuracy of 61 / train accuracy 60  but didn't OOM. Could allow training
 * Try out a simple CNN network.
 * Work on Midterm Report.
 * Test out SVM baseline: DONE.
+
+
