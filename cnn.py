@@ -308,7 +308,7 @@ def train():
 
     print("Model arch: ", model)
     print("Model size is ", sum([param.nelement() for param in model.parameters()]))
-
+    dev_accuracy_list = []
     for epoch in range(FLAGS.max_iter):
         for i, (images, labels) in enumerate(train_loader):
 
@@ -340,6 +340,7 @@ def train():
 
         train_acc = eval_on_train_set(model, train_loader)
         dev_acc, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
+        dev_accuracy_list.append(dev_acc)
         append_to_file(train_dev_error_graph_filename, '%s,%s,%s' % (epoch, train_acc.item()/100, dev_acc.item()/100))
 
         if (epoch + 1) % FLAGS.save_model_every_num_epoch == 0:
@@ -354,14 +355,19 @@ def train():
     print('Checkpointing FINAL trained model...')
     torch.save(model, get_model_checkpoint_path())
 
-    # Test the Model on dev data
     print('Final Evaluations after TRAINING...')
-    train_accuracy = eval_on_train_set(model, train_loader)
     # Test on the train model to see how we do on that as well.
+    train_accuracy = eval_on_train_set(model, train_loader)
+    # Test the Model on dev data
     dev_accuracy, y_dev_predicted, y_dev_true = eval_on_dev_set(model, dev_loader)
+    dev_accuracy_list.append(dev_accuracy)
+    best_dev_accuracy = max(dev_accuracy_list)
+    best_dev_accuracy_index = dev_accuracy_list.index(best_dev_accuracy)
+    best_dev_accuracy_epoch = best_dev_accuracy_index + 1
 
     experiment_result_string = "-------------------\n"
     experiment_result_string += "\nDev Acurracy: {}%".format(dev_accuracy)
+    experiment_result_string += "\nBest Dev Acurracy over training: {}% seen at epoch {}".format(best_dev_accuracy, best_dev_accuracy_epoch)
     experiment_result_string += "\nTrain Acurracy: {}%".format(train_accuracy)
     experiment_result_string += "\nTraining time(secs): {}".format(training_duration_secs)
     experiment_result_string += "\nMax training iterations: {}".format(FLAGS.max_iter)
@@ -375,5 +381,10 @@ def train():
     # Generate confusion matrix
     util.create_confusion_matrices(y_dev_predicted, y_dev_true, get_confusion_matrix_filename())
 
+    return best_dev_accuracy
+
 if __name__ == '__main__':
-    train()
+    best_dev_accuracy = train()
+    # Note: We return the best dev accuracy in the exit code so that we can use this in our hyperparameter tuning
+    # script to do more automated parameter tuning.
+    exit(best_dev_accuracy)
