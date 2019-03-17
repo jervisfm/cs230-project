@@ -214,4 +214,20 @@ arization=0.014409286623908741', '--unfreeze_all_weights=True', '--experiment_na
 * Work on Midterm Report.
 * Test out SVM baseline: DONE.
 
+## Best Dev Accuracy with ELA
+92%
+```
+$  python cnn.py --max_iter 15 --model_name=resnet_pretrained --data_folder=data/processed_casia2_224_ela --cuda=True --l2_regularization=0 --unfreeze_all_weights=True --experiment_name l2reg=0_iter=15_trainallwe
+ights_ela
 
+Dev Acurracy: 90%
+Best Dev Acurracy over training: 92% seen at epoch 5
+Dev Precision: 0.8685714285714285%
+Dev Recall: 0.890625%
+Dev F1 Score: 0.8794599807135969%
+Train Acurracy: 95%
+Training time(secs): 1664.8222482204437
+Max training iterations: 15
+Training time / Max training iterations: 110.98814988136292
+Confusion matrix, without normalization
+```
