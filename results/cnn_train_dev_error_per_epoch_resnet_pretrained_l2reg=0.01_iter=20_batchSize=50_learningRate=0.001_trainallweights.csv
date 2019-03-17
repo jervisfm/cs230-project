@@ -1,0 +1,4 @@
+epoch,train_accuracy,dev_accuracy,dev_precision,dev_recall,dev_f1score
+0,0.59,0.59,0.0,0.0,0.0
+1,0.59,0.59,0.0,0.0,0.0
+2,0.57,0.61,0.5275229357798165,0.44921875,0.4852320675105485
