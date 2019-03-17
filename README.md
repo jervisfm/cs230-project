@@ -217,6 +217,9 @@ arization=0.014409286623908741', '--unfreeze_all_weights=True', '--experiment_na
 ## Best Dev Accuracy with ELA
 92%
 ```
+$  python cnn.py --max_iter 15 --model_name=resnet_pretrained --data_folder=data/processed_casia2_224_ela --cuda=True --l2_regularization=0 --unfreeze_all_weights=True --experiment_name l2reg=0_iter=15_trainallwe
+ights_ela
+
 Dev Acurracy: 90%
 Best Dev Acurracy over training: 92% seen at epoch 5
 Dev Precision: 0.8685714285714285%
