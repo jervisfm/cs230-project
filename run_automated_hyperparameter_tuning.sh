@@ -3,7 +3,7 @@
 set -x
 
 echo "Starting Hyperparameter tuning ..."
-CUDA="False"
+CUDA=False
 INIT_POINTS=1
 MAX_ITER=1
 DATA_FOLDER="data/processed_casia2_224"

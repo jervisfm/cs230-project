@@ -13,6 +13,14 @@ import torchvision.transforms as transforms
 from torch.autograd import Variable
 import argparse
 
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--max_iter', default=100, help="Number of iterations to perform training.", type=int)
@@ -21,7 +29,9 @@ parser.add_argument('--batch_size', default=100, help="Number of examples in one
 parser.add_argument('--num_workers', default=20, help="Number of workers to use in loading data.", type=int)
 parser.add_argument('--learning_rate', default=0.001, help="Learning Rate hyperparameter.", type=float)
 parser.add_argument('--l2_regularization', default=0.0, help="Regularization parameter lambda for L2 regularization.", type=float)
-parser.add_argument('--cuda', default=False, help="Whether to use cuda (gpu) for training.", type=bool)
+parser.add_argument('--cuda', type=str2bool, nargs='?',
+                    const=True, default="False",
+                    help="Whether to use cuda (gpu) for training.")
 parser.add_argument('--unfreeze_all_weights', default=False, help="When using a pretrained model, whether to unfreeze all weights and make them trainable as well.", type=bool)
 parser.add_argument('--unfreeze_ratio', default=1.0, help="Ratio of weights to be unfrozen. 1.0 to have all weights unfrozen.", type=float)
 parser.add_argument('--data_folder', default="data/processed_casia2", help="Data folder with preprocessed CASIA data into train/dev/test splits.")
@@ -49,6 +59,7 @@ class LogisticRegression(nn.Module):
     def forward(self, x):
         out = self.linear(x)
         return out
+
 
 def get_suffix_name():
     experiment_name = "_" + FLAGS.experiment_name if FLAGS.experiment_name else ""
