@@ -3,7 +3,6 @@ channels:
   - pytorch
   - defaults
 dependencies:
-  - bayesian-optimization==1.0.1
   - matplotlib=3.0.2
   - numpy=1.15.4
   - python=3.6
@@ -15,6 +14,7 @@ dependencies:
   - torchvision=0.2.1
   - plotly=3.6.1
   - pip:
+    - bayesian-optimization==1.0.1
     - keras==2.2.4
     - tensorflow==1.12.0
     - h5py==2.9.0
