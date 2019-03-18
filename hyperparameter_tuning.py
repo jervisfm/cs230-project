@@ -31,7 +31,7 @@ parser.add_argument('--model_name', default="alexnet", help="Name of CNN model t
 FLAGS = parser.parse_args()
 
 
-def train_function(max_iter=100, batch_size=100, learning_rate=0.001, l2_regularization=0, cuda=FLAGS.cuda, unfreeze_all_weights="True", unfreeze_ratio=1.0, model_name=FLAGS.model_name, data_folder=FLAGS.data_folder):
+def train_function(max_iter=15, batch_size=100, learning_rate=0.001, l2_regularization=0, cuda=FLAGS.cuda, unfreeze_all_weights="True", unfreeze_ratio=1.0, model_name=FLAGS.model_name, data_folder=FLAGS.data_folder):
     """Executes training with given parameters. Returns best dev accuracy score."""
     max_iter = int(max_iter)
     batch_size = int(batch_size)
@@ -68,11 +68,8 @@ def train_function(max_iter=100, batch_size=100, learning_rate=0.001, l2_regular
 def main():
     # Bounded region of parameter space to explore.
     pbounds = {
-        'max_iter': (4, 12),
-        'batch_size': (50, 100),
         'learning_rate': (0.0001, 0.01),
         'l2_regularization': (0.00001, 0.02),
-        'unfreeze_ratio': (0.5, 1.0),
     }
     optimizer = BayesianOptimization(
         f=train_function,
