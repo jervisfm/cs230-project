@@ -125,7 +125,9 @@ def main():
         results += classification_report_string
         results += "----------"
     print(results)
-        
+
+    util.write_contents_to_file("final_test_results.txt", results)
+
 
 if __name__ == '__main__':
     main()
