@@ -231,3 +231,23 @@ Max training iterations: 15
 Training time / Max training iterations: 110.98814988136292
 Confusion matrix, without normalization
 ```
+
+
+## Final hyper-tuned model.
+This one achieved 94% accuracy at the end.
+https://github.com/jervisfm/cs230-project/blob/a1a9e5c04c2cb923a4c345fcec65f3ec2ebc60fa/results/cnn_results_resnet_pretrained_l2reg%3D0.005_iter%3D20_batchSize%3D100_learningRate%3D0.00025_trainallweights_raj
+```
+Model File: results/cnn_checkpoint_resnet_pretrained_l2reg=0.005_iter=20_batchSize=100_learningRate=0.00025_trainallweights_raj.h5
+
+-------------------
+
+Dev Acurracy: 94%
+Best Dev Acurracy over training: 94% seen at epoch 5
+Dev Precision: 0.9211538461538461%
+Dev Recall: 0.935546875%
+Dev F1 Score: 0.9282945736434108%
+Train Acurracy: 98%
+Training time(secs): 2168.5053930282593
+Max training iterations: 20
+Training time / Max training iterations: 108.42526965141296
+```
