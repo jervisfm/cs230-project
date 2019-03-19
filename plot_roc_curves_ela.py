@@ -79,11 +79,13 @@ def get_predicted_probs(model):
             scores = outputs[:, 1]
         else:
             scores = torch.cat([scores, outputs[:, 1]])
+            scores = scores.detach().cpu()
 
         if actual_labels is None:
             actual_labels = labels
         else:
             actual_labels = torch.cat([actual_labels, labels])
+            actual_labels = actual_labels.detach().cpu()
 
     print("Done. Scores shape: ", scores.shape)
     return scores.detach().cpu().numpy(), actual_labels.detach().cpu().numpy()
