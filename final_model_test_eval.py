@@ -9,6 +9,7 @@ import torch.nn as nn
 import data_loader
 import torchvision
 
+from sklearn.metrics import classification_report
 from models.v1 import CNNv1
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
@@ -103,19 +104,28 @@ def get_predicted_probs(model):
 
 
 def main():
+    results = ''
     for model in models:
-        print("Computing FINAL test results for Model: ", model.name)
+        results += "Computing FINAL test results for Model: {}\n".format(model.name)
         scores, labels, predicted_labels = get_predicted_probs(model)
         fpr, tpr, thresholds = metrics.roc_curve(labels, scores, pos_label=1)
         auc = metrics.roc_auc_score(labels, scores)
         f1_score = metrics.f1_score(labels, predicted_labels, pos_label=1)
         accuracy = metrics.accuracy_score(labels, predicted_labels)
 
-        print("F1 score: ", f1_score)
-        print("Accuracy: ", accuracy)
-        print("AUC: ", auc)
-        print("------------")
+        class_names = ['Real', 'Fake']
 
+
+        results += "F1 score: {}\n".format(f1_score)
+        results += "Accuracy: {}\n".format(accuracy)
+        results += "AUC: {}\n".format(auc)
+
+        classification_report_string = classification_report(labels, predicted_labels, target_names=class_names)
+        results += "\n"
+        results += classification_report_string
+        results += "----------"
+    print(results)
+        
 
 if __name__ == '__main__':
     main()
