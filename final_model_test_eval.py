@@ -105,11 +105,11 @@ def get_predicted_probs(model):
 def main():
     for model in models:
         print("Computing FINAL test results for Model: ", model.name)
-        scores, labels = get_predicted_probs(model)
+        scores, labels, predicted_labels = get_predicted_probs(model)
         fpr, tpr, thresholds = metrics.roc_curve(labels, scores, pos_label=1)
         auc = metrics.roc_auc_score(labels, scores)
-        f1_score = metrics.f1_score(labels, scores, pos_label=1)
-        accuracy = metrics.accuracy_score(labels, scores)
+        f1_score = metrics.f1_score(labels, predicted_labels, pos_label=1)
+        accuracy = metrics.accuracy_score(labels, predicted_labels)
 
         print("F1 score: ", f1_score)
         print("Accuracy: ", accuracy)
