@@ -106,7 +106,7 @@ def get_predicted_probs(model):
 def main():
     results = ''
     for model in models:
-        results += "Computing FINAL test results for Model: {}\n".format(model.name)
+        results += "\n\nComputing FINAL test results for Model: {}\n".format(model.name)
         scores, labels, predicted_labels = get_predicted_probs(model)
         fpr, tpr, thresholds = metrics.roc_curve(labels, scores, pos_label=1)
         auc = metrics.roc_auc_score(labels, scores)
