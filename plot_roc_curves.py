@@ -40,13 +40,14 @@ parser.add_argument('--cuda', type=str2bool, nargs='?',
 
 FLAGS = parser.parse_args()
 
-
 Model = collections.namedtuple('Model', 'name filepath datafolder')
 
-
 models = [
-    Model('Resnet', 'results/cnn_checkpoint_resnet_pretrained_l2reg=0_iter=50.h5', 'data/processed_casia2_224'),
-
+Model('Alexnet', 'results/cnn_checkpoint_alexnet_l2reg=0_iter=100_ela.h5', 'data/processed_casia2_224_ela'),
+Model('Resnet', 'results/cnn_checkpoint_resnet_pretrained_l2reg=0.005_iter=20_batchSize=100_learningRate=0.00025_trainallweights_raj.h5', 'data/processed_casia2_224_ela'), # This is actually an ela model.
+Model('Densenet', 'results/cnn_checkpoint_densenet_pretrained_l2reg=0_iter=15_ela.h5', 'data/processed_casia2_224_ela'),
+Model('Inception', 'results/cnn_checkpoint_inception_pretrained_l2reg=0_iter=15_ela.h5', 'data/processed_casia2_224_ela'),
+Model('Vgg16', 'results/cnn_checkpoint_vgg16_pretrained_l2reg=0_iter=15_ela.h5', 'data/processed_casia2_224_ela'),
 ]
 
 def get_predicted_probs(model):
@@ -98,7 +99,7 @@ def main():
     plt.title("ROC Curve of various models")
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
-    plt.savefig('roc_curve_graph.png')
+    plt.savefig('roc_curve_graph_ela_models.png')
 
 if __name__ == '__main__':
     main()
