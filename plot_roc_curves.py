@@ -95,7 +95,9 @@ def main():
         auc = metrics.roc_auc_score(labels, scores)
         plt.plot(fpr, tpr, label="{}, auc={}".format(model.name, auc))
     plt.legend(loc=4)
-    plt.show()
+    plt.title("ROC Curve of various models")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
     plt.savefig('roc_curve_graph.png')
 
 if __name__ == '__main__':
