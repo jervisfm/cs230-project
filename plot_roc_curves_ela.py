@@ -70,7 +70,7 @@ def get_predicted_probs(model):
         print ("Processing batch #", num_batch)
         num_batch += 1
         if FLAGS.cuda:
-            if FLAGS.model_name.lower().startswith("inception"):
+            if model.name.lower().startswith("inception"):
                 outputs = outputs[0].cuda()
             else:
                 outputs = outputs.cuda()
