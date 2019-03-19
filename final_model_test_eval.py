@@ -1,4 +1,8 @@
 
+"""
+A script to compute resutls for the final trained models on the test set.
+
+"""
 import torch
 import util
 import torch.nn as nn
@@ -53,8 +57,8 @@ Model('Vgg16', 'results/cnn_checkpoint_vgg16_pretrained_l2reg=0_iter=15_ela.h5',
 def get_predicted_probs(model):
     """Retruns predicted probs, labels for given model. """
     params = {'batch_size': 100, 'num_workers': 10, 'cuda': FLAGS.cuda}
-    data_loaders = data_loader.fetch_dataloader(['dev'], model.datafolder, params)
-    dev_loader = data_loaders['dev']
+    data_loaders = data_loader.fetch_dataloader(['dev, test'], model.datafolder, params)
+    loader = data_loaders['test']
     if FLAGS.cuda:
         torch_model = torch.load(model.filepath)
     else:
@@ -63,7 +67,7 @@ def get_predicted_probs(model):
     actual_labels = None
     print ("Computing probabilities for model: ", model.name)
     num_batch = 0
-    for images, labels in dev_loader:
+    for images, labels in loader:
         if FLAGS.cuda:
             images, labels = images.cuda(async=True), labels.cuda(async=True)
         outputs = torch_model(images)
@@ -93,15 +97,18 @@ def get_predicted_probs(model):
 
 def main():
     for model in models:
+        print("Computing FINAL test results for Model: ", model.name)
         scores, labels = get_predicted_probs(model)
         fpr, tpr, thresholds = metrics.roc_curve(labels, scores, pos_label=1)
         auc = metrics.roc_auc_score(labels, scores)
-        plt.plot(fpr, tpr, label="{}, auc={}".format(model.name, auc))
-    plt.legend(loc=4)
-    plt.title("ROC Curve of various models")
-    plt.xlabel("False Positive Rate")
-    plt.ylabel("True Positive Rate")
-    plt.savefig('roc_curve_graph_ela_models.png')
+        f1_score = metrics.f1_score(labels, scores, pos_label=1)
+        accuracy = metrics.accuracy_score(labels, scores)
+
+        print("F1 score: ", f1_score)
+        print("Accuracy: ", accuracy)
+        print("AUC: ", auc)
+        print("------------")
+
 
 if __name__ == '__main__':
     main()
