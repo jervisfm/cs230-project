@@ -95,6 +95,14 @@ def plot_confusion_matrix(cm, classes,
     plt.tight_layout()
 
 
+
+def flatten_tensor_list(prediction_list):
+    output = []
+    for tensor in prediction_list:
+        for x in tensor:
+            output.append(x)
+    return output
+
 def write_contents_to_file(output_file, input_string):
     with open(output_file, 'w') as file_handle:
         file_handle.write(input_string)

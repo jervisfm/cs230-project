@@ -55,9 +55,9 @@ Model('Vgg16', 'results/cnn_checkpoint_vgg16_pretrained_l2reg=0_iter=15_ela.h5',
 ]
 
 def get_predicted_probs(model):
-    """Retruns predicted probs, labels for given model. """
+    """Retruns predicted probs, actual_labels, predicted_labels for given model. """
     params = {'batch_size': 100, 'num_workers': 10, 'cuda': FLAGS.cuda}
-    data_loaders = data_loader.fetch_dataloader(['dev, test'], model.datafolder, params)
+    data_loaders = data_loader.fetch_dataloader(['test'], model.datafolder, params)
     loader = data_loaders['test']
     if FLAGS.cuda:
         torch_model = torch.load(model.filepath)
@@ -65,6 +65,10 @@ def get_predicted_probs(model):
         torch_model = torch.load(model.filepath, map_location='cpu')
     scores = None
     actual_labels = None
+    predicted_labels = []
+
+
+
     print ("Computing probabilities for model: ", model.name)
     num_batch = 0
     for images, labels in loader:
@@ -91,8 +95,11 @@ def get_predicted_probs(model):
             actual_labels = torch.cat([actual_labels.cpu(), labels.cpu()])
             actual_labels = actual_labels.detach().cpu()
 
+        _, predicted = torch.max(outputs.data, 1)
+        predicted_labels.append(predicted.cpu())
+
     print("Done. Scores shape: ", scores.shape)
-    return scores.detach().cpu().numpy(), actual_labels.detach().cpu().numpy()
+    return scores.detach().cpu().numpy(), actual_labels.detach().cpu().numpy(), util.flatten_tensor_list(predicted_labels)
 
 
 def main():
