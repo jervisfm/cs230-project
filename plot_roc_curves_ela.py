@@ -86,7 +86,7 @@ def get_predicted_probs(model):
             actual_labels = torch.cat([actual_labels, labels])
 
     print("Done. Scores shape: ", scores.shape)
-    return scores.detach().numpy(), actual_labels.detach().numpy()
+    return scores.detach().cpu().numpy(), actual_labels.detach().cpu().numpy()
 
 
 def main():
