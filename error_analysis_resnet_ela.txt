@@ -1,13 +1,13 @@
 
 
 Doing FINAL test results Error Analysis for Model: Resnet
-F1 score: 0.8462998102466793
-Accuracy: 0.8708133971291866
-AUC: 0.9364959106418016
+F1 score: 0.8467432950191571
+Accuracy: 0.8724082934609251
+AUC: 0.934607098042001
 
- Number of error predictions: 162
- Number of correct predictions: 1092
- Accuracy sanity check for error analysis:  0.8708133971291866
+ Number of error predictions: 160
+ Number of correct predictions: 1094
+ Accuracy sanity check for error analysis:  0.8724082934609251
  Sampled Mistaken prediction indices: [102  92  14 106  71  20 102 121  74  87]
  Sampled Correct prediction indices: [871 130 769 343 805 385 955 276 459  21]
  Mistaken Classifications: 
