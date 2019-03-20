@@ -4,7 +4,10 @@ Based on https://github.com/jervisfm/cs229-project/blob/master/utils.py
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import torch
 import numpy as np
+import data_loader
+
 import itertools
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_recall_fscore_support
@@ -93,6 +96,56 @@ def plot_confusion_matrix(cm, classes,
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.tight_layout()
+
+
+
+
+def get_predicted_probs(model, cuda):
+    """Retruns predicted probs, actual_labels, predicted_labels for given model. """
+    params = {'batch_size': 100, 'num_workers': 10, 'cuda': FLAGS.cuda}
+    data_loaders = data_loader.fetch_dataloader(['test'], model.datafolder, params)
+    loader = data_loaders['test']
+    if cuda:
+        torch_model = torch.load(model.filepath)
+    else:
+        torch_model = torch.load(model.filepath, map_location='cpu')
+    scores = None
+    actual_labels = None
+    predicted_labels = []
+
+
+
+    print ("Computing probabilities for model: ", model.name)
+    num_batch = 0
+    for images, labels in loader:
+        if cuda:
+            images, labels = images.cuda(async=True), labels.cuda(async=True)
+        outputs = torch_model(images)
+        print ("Processing batch #", num_batch)
+        num_batch += 1
+        if cuda:
+            if model.name.lower().startswith("inception"):
+                outputs = outputs[0].cuda()
+            else:
+                outputs = outputs.cuda()
+
+        if scores is None:
+            scores = outputs[:, 1]
+        else:
+            scores = torch.cat([scores.cpu(), outputs[:, 1].cpu()])
+            scores = scores.detach().cpu()
+
+        if actual_labels is None:
+            actual_labels = labels
+        else:
+            actual_labels = torch.cat([actual_labels.cpu(), labels.cpu()])
+            actual_labels = actual_labels.detach().cpu()
+
+        _, predicted = torch.max(outputs.data, 1)
+        predicted_labels.append(predicted.cpu())
+
+    print("Done. Scores shape: ", scores.shape)
+    return scores.detach().cpu().numpy(), actual_labels.detach().cpu().numpy(), flatten_tensor_list(predicted_labels)
 
 
 
