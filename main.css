@@ -1,0 +1,16 @@
+
+#image-container {
+    width: 100%;
+}
+
+#fake-button {
+    color: red;
+    width: 200px;
+    border: 1px solid black;
+}
+
+#real-button {
+    color:green;
+    width: 200px;
+    border: 1px solid black;
+}
