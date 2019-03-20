@@ -58,7 +58,7 @@ def main():
         auc = metrics.roc_auc_score(labels, scores)
         f1_score = metrics.f1_score(labels, predicted_labels, pos_label=1)
         accuracy = metrics.accuracy_score(labels, predicted_labels)
-        plt.plot(fpr, tpr, label="{}, roc_auc=%.2f, f1_score=%.2f, accuracy=%.2f".format(model.name, auc, f1_score, accuracy))
+        plt.plot(fpr, tpr, label="%s, roc_auc=%.2f, f1_score=%.2f, accuracy=%.2f" % (model.name, auc, f1_score, accuracy))
     plt.legend(loc=4)
     plt.title("ROC Curve and metrics of final models on Test set")
     plt.xlabel("False Positive Rate")
