@@ -22,3 +22,8 @@
     height: 75px;
     border: 1px solid black;
 }
+
+#buttons-container {
+    display: flex;
+    justify-content: center;
+}

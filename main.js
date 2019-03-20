@@ -17,13 +17,39 @@ function isGameOver() {
     return currentIndex  >= NUM_SAMPLE_IMAGES - 1;
 }
 
+function hideFakeButton() {
+    getFakeButton().style.visibility = 'hidden';
+}
+
 function gameOverState() {
 
+    hideFakeButton();
     // SHow the final score.
-        clearImage();
-        getImageContainer().innerHTML = `
-          <h4>Game over. You Got a Final score of ${score} / 10 </h4> 
+    clearImage();
+    if (score < 5) {
+    getImageContainer().innerHTML = `
+          <h4>Game over. You Got a Final score of ${score} / 10.  </h4> 
         `;
+    } else if (score < 8) {
+        getImageContainer().innerHTML = `
+          <h4>Good Job! You Got a Final score of ${score} / 10 </h4> 
+        `;
+    } else if (score <= 9){
+        getImageContainer().innerHTML = `
+          <h4>Amazing Job! You Got a Final score of ${score} / 10 </h4> 
+        `;
+    } else {
+        getImageContainer().innerHTML = `
+          <h4>Superb Job! You Got a Final score of ${score} / 10 </h4> 
+        `;
+    }
+    hideFakeButton();
+    getRealButton().innerHTML = `Play Again`;
+    getRealButton().removeEventListener('click');
+    getRealButton().onclick = () => {
+      location.reload();
+    };
+
 }
 
 function fakeClick() {
