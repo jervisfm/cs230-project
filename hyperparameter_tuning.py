@@ -69,7 +69,7 @@ def main():
     # Bounded region of parameter space to explore.
     pbounds = {
         'learning_rate': (0.0001, 0.01),
-        'l2_regularization': (0.00001, 0.02),
+        'l2_regularization': (0.000001, 0.02),
     }
     optimizer = BayesianOptimization(
         f=train_function,
