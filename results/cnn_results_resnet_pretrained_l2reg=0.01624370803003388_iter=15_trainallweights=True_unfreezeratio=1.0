@@ -1,0 +1,11 @@
+-------------------
+
+Dev Acurracy: 92%
+Best Dev Acurracy over training: 92% seen at epoch 2
+Dev Precision: 0.8482293423271501%
+Dev Recall: 0.982421875%
+Dev F1 Score: 0.9104072398190045%
+Train Acurracy: 92%
+Training time(secs): 1662.0758602619171
+Max training iterations: 15
+Training time / Max training iterations: 110.80505735079447

@@ -251,3 +251,6 @@ Training time(secs): 2168.5053930282593
 Max training iterations: 20
 Training time / Max training iterations: 108.42526965141296
 ```
+
+## Error analysis
+Error analysis spreadsheet -- https://docs.google.com/spreadsheets/d/1BLLUl8mCo-U5J1pzeni3yz5N1HopuKru6019sBxDohw/edit#gid=0

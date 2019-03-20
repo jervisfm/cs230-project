@@ -1,0 +1,49 @@
+
+#image-container {
+    width:100%;
+}
+
+#current-image {
+    width:100%;
+}
+
+#current-progress {
+    font-size: 40px;
+}
+
+#fake-button {
+    color: white;
+    background-color: red;
+    height: 110px;
+    width:40%;
+    border: 1px solid black;
+}
+
+#real-button {
+    color:white;
+    background-color: green;
+    width: 40%;
+    height: 110px;
+    border: 1px solid black;
+}
+
+h1 {
+    font-size: 50px;
+}
+h2 {
+    font-size:45px;
+}
+h4 {
+    font-size: 40px;
+}
+
+button {
+    margin: 20px;
+    font-size: 60px !important;
+}
+
+#buttons-container {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}
