@@ -54,7 +54,7 @@ function gameOverState() {
 
     getRealButton().addEventListener('click',  () => {
       location.reload();
-    };
+    });
 
 }
 
