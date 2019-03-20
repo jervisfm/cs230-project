@@ -49,7 +49,7 @@ function gameOverState() {
         `;
     }
     getButtonContainer().innerHTML = `
-      <button id="real-button" class="mdc-button">Play Again !</button>      
+      <button id="real-button" class="mdc-button">Replay !</button>      
     `;
 
     getRealButton().addEventListener('click',  () => {
