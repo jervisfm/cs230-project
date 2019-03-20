@@ -121,12 +121,12 @@ def main():
 
     result += '\n Mistaken Classifications: '
     for mistakened_index in sampled_mistaken_prediction_indices:
-        filename = loader.filenames[mistakened_index]
+        filename = loader.dataset.filenames[mistakened_index]
         result += '\n{}'.format(filename)
 
     result += '\n Correct classifications: '
     for correct_index in sampled_correct_prediction_indices:
-        filename = loader.filenames[correct_index]
+        filename = loader.dataset.filenames[correct_index]
         result += '\n{}'.format(filename)
 
     util.write_contents_to_file('error_analysis_resnet_ela.txt', result)
