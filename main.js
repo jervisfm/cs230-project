@@ -124,7 +124,7 @@ function loadImage(imageIndex) {
     let imagePath = getImagePath(imageIndex);
     let imageContainer = getImageContainer();
     imageContainer.innerHTML = `
-       <p>Test Image ${currentIndex + 1} of ${NUM_SAMPLE_IMAGES} </p>
+       <p id="current-progress">Test Image ${currentIndex + 1} of ${NUM_SAMPLE_IMAGES} </p>
        <a href="${imagePath}" target="_blank">
          <img id="current-image" src="${imagePath}"/> 
        </a>

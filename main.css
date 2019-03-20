@@ -7,10 +7,14 @@
     width:100%;
 }
 
+#current-progress {
+    font-size: 40px;
+}
+
 #fake-button {
     color: white;
     background-color: red;
-    height: 75px;
+    height: 150px;
     width:40%;
     border: 1px solid black;
 }
@@ -19,13 +23,23 @@
     color:white;
     background-color: green;
     width: 40%;
-    height: 75px;
+    height: 150px;
     border: 1px solid black;
 }
 
+h1 {
+    font-size: 60px;
+}
+h2 {
+    font-size:50px;
+}
+h4 {
+    font-size: 40px;
+}
 
 button {
-    padding: 10px;
+    margin: 20px;
+    font-size: 60px !important;
 }
 
 #buttons-container {
