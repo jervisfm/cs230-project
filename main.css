@@ -1,6 +1,10 @@
 
 #image-container {
-    
+    width:100%;
+}
+
+#current-image {
+    width:100%;
 }
 
 #fake-button {
