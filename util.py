@@ -100,11 +100,11 @@ def plot_confusion_matrix(cm, classes,
 
 
 
-def get_predicted_probs(model, cuda):
+def get_predicted_probs(model, cuda, dataset='test'):
     """Retruns predicted probs, actual_labels, predicted_labels for given model. """
-    params = {'batch_size': 100, 'num_workers': 10, 'cuda': FLAGS.cuda}
-    data_loaders = data_loader.fetch_dataloader(['test'], model.datafolder, params)
-    loader = data_loaders['test']
+    params = {'batch_size': 100, 'num_workers': 10, 'cuda': cuda}
+    data_loaders = data_loader.fetch_dataloader([dataset], model.datafolder, params)
+    loader = data_loaders[dataset]
     if cuda:
         torch_model = torch.load(model.filepath)
     else:
