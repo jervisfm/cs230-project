@@ -1,11 +1,55 @@
 
 const NUM_SAMPLE_IMAGES = 10;
+currentIndex = 0;
+score = 0;
 function init() {
     console.log("Num images available:",  files.length);
     let randomIndices = getRandomIndices(files, NUM_SAMPLE_IMAGES);
     console.log("Random indices", randomIndices);
-    loadImage(randomIndices[0]);
+    loadImage(randomIndices[currentIndex]);
+
+    getFakeButton().addEventListener("click", fakeClick);
+    getRealButton().addEventListener("click", realClick);
 }
+
+
+function fakeClick() {
+    if (isCurrentImageFake()) {
+        score +=1;;
+    }
+    moveToNextImage();
+}
+
+function realClick() {
+    if (isCurrentImageReal()) {
+        score += 1;
+    }
+    moveToNextImage();
+}
+
+function moveToNextImage() {
+    let nextImageIndex = currentIndex + 1;
+    if (nextImageIndex < files.length) {
+        loadImage(nextImageIndex);
+        currentIndex++;
+    } else {
+        // SHow the final score.
+        clearImage();
+        getImageContainer().innerHTML = `
+          <h4>Game over. You Got a Final score of ${score} / 10 </h4> 
+        `;
+
+    }
+}
+
+function isCurrentImageFake() {
+    return isFakeImage(getImageName(currentIndex));
+}
+
+function isCurrentImageReal() {
+    return isRealImage(getImageName(currentIndex));
+}
+
 
 
 function isFakeImage(filename) {
@@ -14,6 +58,10 @@ function isFakeImage(filename) {
 
 function isRealImage(filename) {
     return filename.toLowerCase().startsWith("au");
+}
+
+function getImageName(imageIndex) {
+    return files[imageIndex];
 }
 
 
