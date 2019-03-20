@@ -19,6 +19,11 @@ function isGameOver() {
 
 function hideFakeButton() {
     getFakeButton().style.visibility = 'hidden';
+    getFakeButton().style.display = 'none';
+}
+
+function getButtonContainer() {
+    return document.querySelector("#buttons-container");
 }
 
 function gameOverState() {
@@ -43,10 +48,11 @@ function gameOverState() {
           <h4>Superb Job! You Got a Final score of ${score} / 10 </h4> 
         `;
     }
-    hideFakeButton();
-    getRealButton().innerHTML = `Play Again`;
-    getRealButton().removeEventListener('click');
-    getRealButton().onclick = () => {
+    getButtonContainer().innerHTML = `
+      <button id="real-button" class="mdc-button">Real</button>      
+    `;
+
+    getRealButton().addEventListener('click',  () => {
       location.reload();
     };
 
