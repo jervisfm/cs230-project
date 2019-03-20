@@ -100,7 +100,7 @@ def plot_confusion_matrix(cm, classes,
 
 
 
-def get_predicted_probs(model, cuda, dataset='test'):
+def get_predicted_probs(model, cuda, dataset='test', return_dataloader=False):
     """Retruns predicted probs, actual_labels, predicted_labels for given model. """
     params = {'batch_size': 100, 'num_workers': 10, 'cuda': cuda}
     data_loaders = data_loader.fetch_dataloader([dataset], model.datafolder, params)
@@ -145,7 +145,11 @@ def get_predicted_probs(model, cuda, dataset='test'):
         predicted_labels.append(predicted.cpu())
 
     print("Done. Scores shape: ", scores.shape)
-    return scores.detach().cpu().numpy(), actual_labels.detach().cpu().numpy(), flatten_tensor_list(predicted_labels)
+    if return_dataloader:
+        return scores.detach().cpu().numpy(), actual_labels.detach().cpu().numpy(), flatten_tensor_list(
+            predicted_labels), loader
+    else:
+        return scores.detach().cpu().numpy(), actual_labels.detach().cpu().numpy(), flatten_tensor_list(predicted_labels)
 
 
 
