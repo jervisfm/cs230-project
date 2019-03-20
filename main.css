@@ -8,13 +8,17 @@
 }
 
 #fake-button {
-    color: red;
-    width: 200px;
+    color: white;
+    background-color: red;
+    height: 75px;
+    width:40px;
     border: 1px solid black;
 }
 
 #real-button {
-    color:green;
-    width: 200px;
+    color:white;
+    background-color: green;
+    width: 40%;
+    height: 75px;
     border: 1px solid black;
 }
