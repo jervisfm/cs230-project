@@ -17,9 +17,9 @@ data_dir = 'data/processed_casia2_1024/dev/'
 if __name__ == '__main__':
     filenames = os.listdir(data_dir)
     fullpaths = [os.path.join(data_dir, f) for f in filenames if f.endswith('.jpg')]
-    result = 'let files = ['
-    for image_path in fullpaths:
-        result += '"{}, "'.format(image_path)
-    result += ']';
+    result = 'const IMAGE_FOLDER = "{}"; let files = ['.format(data_dir)
+    for image_name in filenames:
+        result += '"{}", '.format(image_name)
+    result += '] ;'
 
     util.write_contents_to_file('image_files.js', result)
