@@ -129,7 +129,16 @@ def main():
         filename = loader.dataset.filenames[correct_index]
         result += '\n{}'.format(filename)
 
+
+
     util.write_contents_to_file('error_analysis_resnet_ela.txt', result)
+
+    # Write all the misclassifcations into a csv file for ad-hoc analysis.
+    result = ''
+    for index in mistaken_indices:
+        filename = loader.dataset.filenames[index]
+        result += '{}\n'.format(filename)
+    util.write_contents_to_file('error_analysis_resnet_ela_all_errors.csv', result)
 
 
 
