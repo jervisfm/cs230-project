@@ -14,7 +14,7 @@
 #fake-button {
     color: white;
     background-color: red;
-    height: 150px;
+    height: 110px;
     width:40%;
     border: 1px solid black;
 }
@@ -23,7 +23,7 @@
     color:white;
     background-color: green;
     width: 40%;
-    height: 150px;
+    height: 110px;
     border: 1px solid black;
 }
 
