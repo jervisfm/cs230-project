@@ -13,11 +13,25 @@ function init() {
 }
 
 
+function isGameOver() {
+    return currentIndex  >= NUM_SAMPLE_IMAGES - 1;
+}
+
+function gameOverState() {
+
+    // SHow the final score.
+        clearImage();
+        getImageContainer().innerHTML = `
+          <h4>Game over. You Got a Final score of ${score} / 10 </h4> 
+        `;
+}
+
 function fakeClick() {
     if (isCurrentImageFake()) {
         score +=1;;
     }
     moveToNextImage();
+
 }
 
 function realClick() {
@@ -25,20 +39,19 @@ function realClick() {
         score += 1;
     }
     moveToNextImage();
+
+
 }
 
 function moveToNextImage() {
     let nextImageIndex = currentIndex + 1;
+    currentIndex++;
+    if (isGameOver()) {
+        gameOverState();
+        return;
+    }
     if (nextImageIndex < files.length) {
         loadImage(nextImageIndex);
-        currentIndex++;
-    } else {
-        // SHow the final score.
-        clearImage();
-        getImageContainer().innerHTML = `
-          <h4>Game over. You Got a Final score of ${score} / 10 </h4> 
-        `;
-
     }
 }
 
