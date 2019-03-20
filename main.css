@@ -23,7 +23,13 @@
     border: 1px solid black;
 }
 
+
+button {
+    padding: 10px;
+}
+
 #buttons-container {
     display: flex;
     justify-content: center;
+    padding: 5px;
 }
