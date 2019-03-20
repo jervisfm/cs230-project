@@ -50,54 +50,14 @@ Model('Inception', 'results/cnn_checkpoint_inception_pretrained_l2reg=0_iter=15_
 Model('Vgg16', 'results/cnn_checkpoint_vgg16_pretrained_l2reg=0_iter=15_ela.h5', 'data/processed_casia2_224_ela'),
 ]
 
-def get_predicted_probs(model):
-    """Retruns predicted probs, labels for given model. """
-    params = {'batch_size': 100, 'num_workers': 10, 'cuda': FLAGS.cuda}
-    data_loaders = data_loader.fetch_dataloader(['test'], model.datafolder, params)
-    test_loader = data_loaders['test']
-    if FLAGS.cuda:
-        torch_model = torch.load(model.filepath)
-    else:
-        torch_model = torch.load(model.filepath, map_location='cpu')
-    scores = None
-    actual_labels = None
-    print ("Computing probabilities for model: ", model.name)
-    num_batch = 0
-    for images, labels in test_loader:
-        if FLAGS.cuda:
-            images, labels = images.cuda(async=True), labels.cuda(async=True)
-        outputs = torch_model(images)
-        print ("Processing batch #", num_batch)
-        num_batch += 1
-        if FLAGS.cuda:
-            if model.name.lower().startswith("inception"):
-                outputs = outputs[0].cuda()
-            else:
-                outputs = outputs.cuda()
-
-        if scores is None:
-            scores = outputs[:, 1]
-        else:
-            scores = torch.cat([scores.cpu(), outputs[:, 1].cpu()])
-            scores = scores.detach().cpu()
-
-        if actual_labels is None:
-            actual_labels = labels
-        else:
-            actual_labels = torch.cat([actual_labels.cpu(), labels.cpu()])
-            actual_labels = actual_labels.detach().cpu()
-
-    print("Done. Scores shape: ", scores.shape)
-    return scores.detach().cpu().numpy(), actual_labels.detach().cpu().numpy()
-
 
 def main():
     for model in models:
-        scores, labels = get_predicted_probs(model)
+        scores, labels, predicted_labels = util.get_predicted_probs(model, FLAGS.cuda)
         fpr, tpr, thresholds = metrics.roc_curve(labels, scores, pos_label=1)
         auc = metrics.roc_auc_score(labels, scores)
-        f1_score = metrics.f1_score(labels, scores, pos_label=1)
-        accuracy = metrics.accuracy_score(labels, scores)
+        f1_score = metrics.f1_score(labels, predicted_labels, pos_label=1)
+        accuracy = metrics.accuracy_score(labels, predicted_labels)
         plt.plot(fpr, tpr, label="{}, roc_auc={}, f1_score={}, accuracy={}".format(model.name, auc, f1_score, accuracy))
     plt.legend(loc=4)
     plt.title("ROC Curve and metrics of final models on Test set")
