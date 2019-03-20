@@ -91,7 +91,7 @@ def main():
     mistaken_indices = []
     correct_indicies = []
     for index, label in enumerate(labels):
-        if label[index] == predicted_labels[index]:
+        if labels[index] == predicted_labels[index]:
             # Correct prediction
             correct_indicies.append(index)
         else:
